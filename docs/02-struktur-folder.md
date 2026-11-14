@@ -1,6 +1,6 @@
 # 02 — Struktur Folder
 
-Dokumen ini adalah target struktur saat scaffold Tahap 2. **Belum ada folder aplikasi yang dibuat pada Tahap 1.** Hanya `docs/`, `PROJECT_BRIEF.md`, dan `AGENTS.md` yang ada di repositori.
+Dokumen ini adalah target struktur. Scaffold Tahap 2 sudah dibuat; selisih implementasi dicatat di bagian 6. Pada Tahap 1, repositori hanya berisi `docs/`, `PROJECT_BRIEF.md`, dan `AGENTS.md`.
 
 ## 1. Pohon target
 
@@ -12,8 +12,7 @@ ridecare/
 ├── package.json
 ├── tsconfig.json
 ├── next.config.ts
-├── tailwind.config.ts
-├── postcss.config.mjs
+├── next-env.d.ts
 ├── .env.example
 ├── .env.local                 # tidak di-commit
 ├── public/
@@ -30,6 +29,7 @@ ridecare/
 │   ├── app/
 │   │   ├── layout.tsx
 │   │   ├── globals.css
+│   │   ├── icon.svg
 │   │   ├── page.tsx                    # Beranda
 │   │   ├── keluhan/
 │   │   │   └── page.tsx                # Pilih motor + form + pertanyaan
@@ -151,10 +151,22 @@ Folder `tests/` mengikuti runner yang dipilih saat scaffold. Jika memakai Vitest
 
 Gunakan alias `@/*` ke `src/*` agar tidak ada impor relatif berantai. Contoh: `import { analyzeComplaint } from "@/lib/analysis/engine"`.
 
-## 5. File yang belum boleh dibuat di Tahap 1
+## 5. Batas Tahap 1 (sudah dilampaui)
+
+Pada Tahap 1, item berikut belum dibuat:
 
 - `package.json`, lockfile, konfigurasi Next/Tailwind.
 - Komponen, halaman, mesin analisis, data aturan nyata.
 - Migrasi SQL yang dijalankan ke Supabase.
 
-Tahap 1 hanya menghasilkan dokumen di `docs/`.
+Tahap 2 sudah membuat scaffold, halaman beranda, komponen UI, dan placeholder rute. Mesin analisis, data aturan, dan migrasi yang dijalankan tetap belum dibuat.
+
+## 6. Selisih implementasi Tahap 2
+
+- Next.js 16 + React 19 + Tailwind CSS 4. Tailwind 4 dikonfigurasi lewat `src/app/globals.css` dan loader `@tailwindcss/turbopack` di `next.config.ts`; tidak ada `tailwind.config.ts` atau `postcss.config.mjs`.
+- Rute fitur sudah ada, tetapi selain `/tentang` isinya masih placeholder `ComingSoon`, bukan fitur.
+- `src/lib/supabase/client.ts`, `server.ts`, dan `env.ts` sudah disiapkan, tetapi tidak diimpor oleh halaman mana pun.
+- `.env.example` tersedia; `.env.local` diabaikan git.
+- Folder `src/data/*`, `src/lib/analysis`, `src/lib/templates`, `src/lib/storage`, `src/components/forms`, `src/components/result`, `src/types`, `tests/*`, dan `supabase/migrations` masih placeholder.
+- Tambahan kecil: `src/lib/constants.ts`, `src/lib/utils.ts`, `src/components/ui/logo.tsx`, `src/components/ui/icons.tsx`, dan `src/app/icon.svg`.
+- `next.config.ts` mengatur `turbopack.root` agar Turbopack tidak mencari lockfile di luar repo.

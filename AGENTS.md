@@ -2,7 +2,7 @@
 
 ## Baca dulu
 - Baca `PROJECT_BRIEF.md` sebelum mengerjakan apa pun, terutama bagian **"Keputusan Arsitektur (Terbaru)"**. Bagian itu mengalahkan bagian lain jika bertentangan.
-- Status repo: baru berisi `PROJECT_BRIEF.md`; aplikasi belum di-scaffold. Jangan menganggap file/folder Next.js sudah ada.
+- Status repo: Tahap 1 (docs) dan Tahap 2 (scaffold Next.js + beranda + komponen UI) selesai. Fitur keluhan, mesin aturan, kamus, tutorial, dan Supabase belum diimplementasikan; halaman terkait masih placeholder.
 
 ## Aturan produk (wajib, jangan dilanggar)
 - Proyek harus gratis: tanpa API berbayar. Analisis keluhan memakai mesin aturan (rule-based), bukan AI. MVP tanpa login.
