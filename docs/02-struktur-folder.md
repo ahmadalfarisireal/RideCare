@@ -130,13 +130,13 @@ Folder `tests/` mengikuti runner yang dipilih saat scaffold. Jika memakai Vitest
 | `src/components/ui/` | Komponen presentasional generik | Fetch data, aturan bisnis |
 | `src/components/forms/` | Form dan validasi input UI | Menentukan penyebab/urgensi |
 | `src/components/result/` | Menampilkan `AnalysisResult` | Menghitung ulang hasil |
-| `src/lib/analysis/` | Normalisasi, skor, urgensi, safety | React, DOM, Supabase, jaringan |
-| `src/lib/templates/` | Teks ringkasan, checklist, WhatsApp | Komponen React |
-| `src/data/rules/` | Data aturan | Impor dari `components`/`app` |
-| `src/data/tutorials/` | Konten tutorial | Logika analisis |
-| `src/data/glossary/` | Istilah dan definisi | Logika analisis |
-| `src/types/` | Tipe bersama | Implementasi |
+| `src/lib/complaint-engine/` | Tipe & mesin aturan murni: normalisasi, skor, urgensi, safety, template, `analyze` | React, DOM, Supabase, jaringan |
+| `src/data/complaint-rules.ts` | Data aturan keluhan | Impor dari `components`/`app` |
+| `src/data/tutorials/` | Konten tutorial (nanti) | Logika analisis |
+| `src/data/glossary/` | Istilah dan definisi (nanti) | Logika analisis |
 | `supabase/migrations/` | DDL dan policy | Kode aplikasi |
+
+> Catatan: `src/lib/analysis/`, `src/lib/templates/`, `src/data/rules/`, dan `src/types/` adalah placeholder target awal; implementasi mesin Tahap 3A berada di `src/lib/complaint-engine/` dan `src/data/complaint-rules.ts`.
 
 ## 3. Konvensi penamaan
 
@@ -161,12 +161,13 @@ Pada Tahap 1, item berikut belum dibuat:
 
 Tahap 2 sudah membuat scaffold, halaman beranda, komponen UI, dan placeholder rute. Mesin analisis, data aturan, dan migrasi yang dijalankan tetap belum dibuat.
 
-## 6. Selisih implementasi Tahap 2
+## 6. Selisih implementasi Tahap 2–3A
 
 - Next.js 16 + React 19 + Tailwind CSS 4. Tailwind 4 dikonfigurasi lewat `src/app/globals.css` dan loader `@tailwindcss/turbopack` di `next.config.ts`; tidak ada `tailwind.config.ts` atau `postcss.config.mjs`.
-- Rute fitur sudah ada, tetapi selain `/tentang` isinya masih placeholder `ComingSoon`, bukan fitur.
+- Rute fitur sudah ada, tetapi selain `/tentang` isinya masih placeholder `ComingSoon`, bukan fitur (belum ada UI form keluhan/hasil).
 - `src/lib/supabase/client.ts`, `server.ts`, dan `env.ts` sudah disiapkan, tetapi tidak diimpor oleh halaman mana pun.
 - `.env.example` tersedia; `.env.local` diabaikan git.
-- Folder `src/data/*`, `src/lib/analysis`, `src/lib/templates`, `src/lib/storage`, `src/components/forms`, `src/components/result`, `src/types`, `tests/*`, dan `supabase/migrations` masih placeholder.
+- **Tahap 3A (mesin saja, tanpa UI/React):** `src/lib/complaint-engine/` (tipe + `analyze` murni, tanpa jaringan/React), `src/data/complaint-rules.ts`, pengujian Vitest di `tests/complaint-engine/`, dan `vitest.config.ts` + skrip `test`.
+- Placeholder lama `src/lib/analysis/`, `src/lib/templates/`, `src/data/rules/`, dan sebagian `src/types/` belum dipakai; folder fitur lain (`src/components/forms`, `src/components/result`, `src/data/tutorials`, `src/data/glossary`, `supabase/migrations`) masih menunggu tahap berikutnya.
 - Tambahan kecil: `src/lib/constants.ts`, `src/lib/utils.ts`, `src/components/ui/logo.tsx`, `src/components/ui/icons.tsx`, dan `src/app/icon.svg`.
 - `next.config.ts` mengatur `turbopack.root` agar Turbopack tidak mencari lockfile di luar repo.

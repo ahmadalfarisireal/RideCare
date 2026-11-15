@@ -2,20 +2,25 @@
 
 Mesin analisis bersifat **rule-based, deterministik, dan lokal**. Tidak ada AI dan tidak ada panggilan jaringan pada MVP.
 
-Lokasi target:
+Lokasi aktual (Tahap 3A):
 
 ```text
-src/types/rule.ts          # tipe data
-src/types/analysis.ts      # input/output analisis
-src/data/rules/*.ts        # data aturan
-src/lib/analysis/*.ts      # mesin: normalisasi, skor, urgensi, safety
+src/lib/complaint-engine/
+  types.ts       # tipe domain & hasil
+  normalize.ts   # normalisasi teks, bobot/pencocokan kata kunci
+  scoring.ts     # skor kecocokan & pemilihan pemenang
+  urgency.ts     # perbandingan urgensi
+  safety.ts      # pengaman keselamatan di kode
+  templates.ts   # ringkasan, checklist, pertanyaan, disclaimer
+  engine.ts      # fungsi analyze(input)
+  index.ts       # ekspor publik
+src/data/complaint-rules.ts  # data aturan
 ```
 
-## 1. Tipe domain
+## 1. Tipe domain (aktual, `src/lib/complaint-engine/types.ts`)
 
 ```ts
-// src/types/rule.ts
-export type MotorcycleType = "bebek" | "matik" | "sport" | "listrik";
+export type MotorType = "bebek" | "matik" | "sport" | "listrik";
 
 export type Urgency =
   | "aman_ditunda"
@@ -32,7 +37,7 @@ export type SafetyCategory =
 export type EngineTemperature = "dingin" | "panas" | "tidak_tahu";
 export type Flag = boolean | "tidak_tahu";
 
-export interface FollowUpAnswers {
+export interface CompanionAnswers {
   engineTemperature?: EngineTemperature;
   indicatorLight?: Flag;
   smoke?: Flag;
@@ -56,28 +61,25 @@ export interface RuleCondition {
   replacedPartsBefore?: boolean;
 }
 
-export interface ComplaintRule {
+export interface Rule {
   id: string;
-  category: "umum" | SafetyCategory;
+  category?: "umum" | SafetyCategory;
   keywords: string[];
-  applicableTypes: MotorcycleType[];
+  applicable_types: MotorType[];
   conditions?: RuleCondition;
-  possibleCauses: string[];
-  componentsToCheck: string[];
+  possible_causes: string[];
+  components_to_check: string[];
   urgency: Urgency;
-  safetyLock: boolean;
-  safetyCategory?: SafetyCategory;
-  relatedTutorials: string[];
-  mechanicQuestions: string[];
+  safety_lock: boolean;
+  safety_category?: SafetyCategory;
+  related_tutorials: string[];
+  mechanic_questions: string[];
 }
-```
 
-```ts
-// src/types/analysis.ts
 export interface AnalysisInput {
   complaint: string;
-  motorcycleType: MotorcycleType;
-  answers: FollowUpAnswers;
+  motorcycleType: MotorType;
+  answers: CompanionAnswers;
 }
 
 export interface Cause {
@@ -101,7 +103,7 @@ export interface AnalysisResult {
 }
 ```
 
-Aturan untuk `applicableTypes`: tulis semua tipe yang relevan secara eksplisit. Untuk aturan umum, tulis keempat tipe (`["bebek", "matik", "sport", "listrik"]`). Tipe yang tidak cocok membuat aturan dilewati. Ini mencegah aturan khusus matik muncul untuk motor sport atau motor listrik.
+Aturan untuk `applicable_types`: tulis semua tipe yang relevan secara eksplisit. Untuk aturan umum, tulis keempat tipe (`["bebek", "matik", "sport", "listrik"]`). Tipe yang tidak cocok membuat aturan dilewati. Mesin dipanggil melalui `analyze(input): AnalysisResult` (`src/lib/complaint-engine`).
 
 ## 2. Normalisasi teks
 
@@ -178,24 +180,21 @@ Kategori terkunci: `rem`, `kebocoran_bahan_bakar`, `kelistrikan_utama`, `mesin`,
 
 Aturan perilaku:
 
-- `safetyLock: true` **wajib** disertai `safetyCategory`.
-- Jika ada aturan safety yang cocok:
-  - `safetyLocked = true`.
-  - Urgensi minimal `perlu_segera_diperiksa`; aturan akut seperti rem blong, kebocoran bahan bakar, korsleting, overheat berat, atau gangguan tegangan tinggi motor listrik menetapkan `jangan_dikendarai`.
-  - Tidak ada saran bongkar sendiri.
-  - Rekomendasi tutorial DIY dikosongkan (`recommendedTutorials = []`).
-  - UI menampilkan peringatan keselamatan dan CTA ke bengkel/teknisi.
+- Aturan dengan `safety_lock: true` **wajib** disertai `safety_category` yang sesuai.
+- Jika ada aturan terkunci yang cocok, hasil **selalu** `safetyLocked = true`, **urgensi minimal `perlu_segera_diperiksa` (tidak pernah `aman_ditunda`)**, tidak ada saran bongkar sendiri, rekomendasi tutorial DIY dikosongkan (`recommendedTutorials = []`), dan hasil mengarahkan ke bengkel/teknisi kompeten.
+- **Gejala akut** (mis. rem blong, bensin menetes/bocor, bau gosong/korsleting, overheat parah, kondisi baterai motor listrik berbahaya) memaksa urgensi `jangan_dikendarai`.
+- **Kelistrikan:** "lampu redup / aki cepat habis" **tidak** terkunci (urgensi `perlu_segera_diperiksa`, boleh rekomendasi tutorial cek aki/terminal). Terkunci hanya jika ada bau gosong, kabel panas/meleleh, korsleting, atau sekring putus berulang.
 - Kategori `mesin` hanya dipakai untuk gejala berat (overheat, suara ketukan keras, mesin mati berulang, asap putih tebal). Gejala ringan seperti brebet tidak otomatis dianggap safety.
 
-Pengaman kode di `lib/analysis/safety.ts` memaksa aturan di atas, sehingga kesalahan penandaan data tidak bisa menghasilkan saran bongkar sendiri.
+**Pengaman kode** (`src/lib/complaint-engine/safety.ts`): aturan yang cocok dengan `safety_category` terkunci tetap diperlakukan terkunci **meskipun** `safety_lock` bernilai `false`, sehingga hasil tetap terkunci, tanpa tutorial, dan urgensi tidak pernah `aman_ditunda`. Pengaman ini mencegah kesalahan penandaan data menghasilkan saran bongkar sendiri.
 
 ## 6. Fallback tanpa aturan cocok
 
-Jika tidak ada aturan yang memenuhi ambang:
+Jika tidak ada aturan yang memenuhi ambang (atau keluhan kosong):
 
 - `possibleCauses = []`
-- `componentsToCheck = ["Periksa menyeluruh di bengkel"]`
-- `urgency = "perlu_segera_diperiksa"` hanya jika pengguna menandai gejala berat; selain itu `"aman_ditunda"`.
+- `componentsToCheck = ["Periksa menyeluruh di bengkel atau teknisi yang kompeten"]`
+- `urgency = "perlu_segera_diperiksa"` dengan saran periksa ke bengkel.
 - `recommendedTutorials = []`
 - `mechanicQuestions` = pertanyaan umum.
 - `checklist` = checklist anti getok harga.
@@ -342,7 +341,7 @@ export const motorListrikRules: ComplaintRule[] = [
 ];
 ```
 
-Data aturan diagregasi di `src/data/rules/index.ts` sebagai satu array `complaintRules`. Urutan array tidak menentukan hasil; skor dan tie-break yang menentukan.
+Data aturan MVP disimpan di `src/data/complaint-rules.ts` sebagai array `complaintRules`. Urutan array tidak menentukan hasil; skor dan tie-break yang menentukan.
 
 ## 9. Sepuluh slug tutorial MVP
 
