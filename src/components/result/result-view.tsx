@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 
 import { analyze, type AnalysisInput, type AnalysisResult } from "@/lib/complaint-engine";
+import { getTutorialBySlug } from "@/data/tutorials";
 import {
   clearComplaintInput,
   loadComplaintInput,
@@ -160,15 +161,31 @@ export function ResultView() {
               teknisi yang kompeten.
             </p>
           ) : hasTutorials ? (
-            <div className="space-y-2">
+            <div className="space-y-3">
               <p className="text-sm text-muted">
                 Tutorial relevan untuk kemungkinan di atas:
               </p>
-              <p className="text-sm font-medium text-foreground">Tutorial segera hadir</p>
-              <ul className="list-disc space-y-1 pl-5 text-sm text-muted">
-                {result.recommendedTutorials.map((slug) => (
-                  <li key={slug}>{slug}</li>
-                ))}
+              <ul className="space-y-2">
+                {result.recommendedTutorials.map((slug) => {
+                  const tutorial = getTutorialBySlug(slug);
+                  if (!tutorial) {
+                    return (
+                      <li key={slug} className="text-sm text-muted">
+                        {slug}
+                      </li>
+                    );
+                  }
+                  return (
+                    <li key={slug}>
+                      <Link
+                        href={`/tutorial/${tutorial.slug}`}
+                        className="text-sm font-medium text-accent underline-offset-4 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
+                      >
+                        {tutorial.title}
+                      </Link>
+                    </li>
+                  );
+                })}
               </ul>
             </div>
           ) : (
