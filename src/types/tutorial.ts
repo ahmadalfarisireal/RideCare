@@ -12,6 +12,7 @@ export interface Tutorial {
   safety_warnings: string[];
   steps: string[];
   when_to_stop: string[];
+  related_glossary_ids: string[];
 }
 
 export const DIFFICULTY_LABELS: Record<TutorialDifficulty, string> = {

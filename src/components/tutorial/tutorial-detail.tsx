@@ -1,7 +1,11 @@
+import Link from "next/link";
+
 import { DisclaimerBanner } from "@/components/layout/disclaimer-banner";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { AlertTriangleIcon } from "@/components/ui/icons";
+import { glossaryTerms } from "@/data/glossary";
+import type { GlossaryTerm } from "@/types/glossary";
 import {
   DIFFICULTY_LABELS,
   MOTOR_TYPE_LABELS,
@@ -15,6 +19,10 @@ const difficultyVariant = {
 } as const;
 
 export function TutorialDetail({ tutorial }: { tutorial: Tutorial }) {
+  const relatedTerms = tutorial.related_glossary_ids
+    .map((id) => glossaryTerms.find((term) => term.id === id))
+    .filter((term): term is GlossaryTerm => term !== undefined);
+
   return (
     <div className="space-y-6">
       <div className="space-y-3">
@@ -58,6 +66,30 @@ export function TutorialDetail({ tutorial }: { tutorial: Tutorial }) {
           </ul>
         </CardContent>
       </Card>
+
+      {relatedTerms.length > 0 ? (
+        <Card>
+          <CardHeader>
+            <CardTitle>Istilah yang sering muncul</CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-3">
+            <p className="text-sm text-muted">
+              Istilah teknis dijelaskan dengan bahasa sederhana di kamus. Ketuk untuk membuka.
+            </p>
+            <div className="flex flex-wrap gap-2">
+              {relatedTerms.map((term) => (
+                <Link
+                  key={term.id}
+                  href={`/kamus#term-${term.id}`}
+                  className="inline-flex min-h-10 items-center rounded-full border border-border px-3 py-1.5 text-sm font-medium text-foreground hover:border-accent/50 hover:bg-surface-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
+                >
+                  {term.term}
+                </Link>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
+      ) : null}
 
       <Card>
         <CardHeader>

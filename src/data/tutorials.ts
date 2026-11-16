@@ -13,14 +13,14 @@ export const tutorials: Tutorial[] = [
       "Lap bersih",
     ],
     safety_warnings: [
-      "Lakukan saat motor dalam keadaan stabil di permukaan datar; gunakan standar tengah/samping dengan aman agar motor tidak mudah goyah.",
+      "Lakukan saat motor dalam keadaan stabil di permukaan datar; gunakan standar (penopang motor) tengah/samping dengan aman agar motor tidak mudah goyah.",
       "Periksa ban saat kondisi aman untuk disentuh; hindari memeriksa tepat setelah berkendara jauh jika ban terasa sangat panas.",
       "Gunakan tekanan angin sesuai anjuran pada stiker motor atau buku manual, bukan perkiraan.",
     ],
     steps: [
       "Parkirkan motor di tempat datar dan pastikan posisi motor stabil sebelum mulai.",
       "Cari informasi tekanan angin yang dianjurkan pada stiker di motor atau di buku manual pemilik.",
-      "Lepas penutup pentil (jika ada) dan simpan agar tidak hilang.",
+      "Lepas penutup pentil (katup kecil tempat udara masuk) jika ada, lalu simpan agar tidak hilang.",
       "Jika memiliki alat ukur, tempelkan ke pentil untuk melihat kondisi tekanan saat ini; jika tidak ada alat ukur, periksa tampilan ban dan rencanakan pengecekan di tempat pompa yang memiliki alat ukur.",
       "Tambahkan atau kurangi angin secara bertahap sesuai anjuran pabrikan. Setelah menyesuaikan, periksa kembali.",
       "Pasang kembali penutup pentil dan pastikan tidak ada suara angin keluar dari sekitar pentil.",
@@ -28,9 +28,10 @@ export const tutorials: Tutorial[] = [
     when_to_stop: [
       "Ban terlihat kempis parah, sobek, benjol, atau ada benda menancap di ban.",
       "Angin terus berkurang dalam waktu singkat atau terdengar/terasa ada kebocoran.",
-      "Velg terlihat peyang/retak atau motor terasa tidak stabil saat didorong.",
+      "Velg (roda logam tempat ban terpasang) terlihat peyang/retak atau motor terasa tidak stabil saat didorong.",
       "Kamu tidak yakin kondisi ban aman untuk digunakan; bawa ke bengkel atau teknisi kompeten.",
     ],
+    related_glossary_ids: ["ban-dan-tekanan-angin"],
   },
   {
     slug: "ganti-oli-mesin",
@@ -50,6 +51,7 @@ export const tutorials: Tutorial[] = [
       "Parkirkan motor pada permukaan datar dan posisi stabil agar tidak roboh saat dikerjakan.",
       "Tampung oli bekas dengan wadah tertutup dan buang di tempat yang menerima limbah oli; jangan membuang oli ke tanah atau saluran air.",
       "Gunakan jenis dan takaran oli sesuai buku manual atau petunjuk pabrikan, bukan perkiraan.",
+      "Ini perawatan rutin, bukan bongkar mesin bagian dalam. Jika muncul ketukan keras, asap putih tebal, mesin kepanasan, atau mesin mati berulang, hentikan dan bawa ke bengkel.",
     ],
     steps: [
       "Siapkan alat dan oli yang sesuai buku manual. Pastikan motor stabil dan mesin dalam keadaan dingin.",
@@ -57,15 +59,16 @@ export const tutorials: Tutorial[] = [
       "Buka tutup pengisian oli (jika diperlukan) agar oli lama lebih mudah keluar, mengikuti panduan manual.",
       "Buka baut pembuangan oli dengan hati-hati dan biarkan oli bekas mengalir ke wadah sampai habis. Hindari kontak oli dengan kulit.",
       "Pasang kembali baut pembuangan sesuai panduan manual tanpa memaksakan; jika ragu, hentikan dan minta bantuan bengkel.",
-      "Isi oli baru secara bertahap sesuai takaran yang dianjurkan di buku manual/stiker, lalu periksa level oli melalui penanda yang tersedia.",
-      "Pasang kembali tutup pengisian, bersihkan sisa oli yang tumpah, dan pastikan tidak ada tetesan sebelum menyalakan mesin sebentar untuk pengecekan.",
+      "Isi oli baru secara bertahap sesuai takaran yang dianjurkan di buku manual/stiker, lalu periksa level oli (ketinggian oli) melalui penanda yang tersedia.",
+      "Pasang kembali tutup pengisian, bersihkan sisa oli yang tumpah, dan pastikan tidak ada tetesan sebelum menyalakan mesin sebentar untuk pengecekan. Jika masih menetes, jangan menyalakan mesin dan minta bantuan bengkel.",
     ],
     when_to_stop: [
-      "Baut pembuangan terasa macet, dol, atau ulir tidak mau masuk kembali dengan benar.",
+      "Baut pembuangan terasa macet, dol, atau ulir (garis sekrup pada baut) tidak mau masuk kembali dengan benar.",
       "Terlihat oli merembes/menetes dari baut atau area lain setelah dipasang kembali.",
       "Kamu tidak yakin jenis atau takaran oli yang benar untuk motor; periksa buku manual atau minta bantuan bengkel.",
       "Muncul suara, asap, atau bau tidak biasa setelah mesin dinyalakan; matikan mesin dan bawa ke bengkel.",
     ],
+    related_glossary_ids: ["oli-mesin", "servis-rutin"],
   },
   {
     slug: "cek-ganti-busi",
@@ -82,22 +85,24 @@ export const tutorials: Tutorial[] = [
       "Matikan mesin dan tunggu sampai mesin benar-benar dingin sebelum menyentuh area busi agar tidak terkena panas.",
       "Pastikan motor stabil dan kunci kontak dalam posisi mati selama pekerjaan.",
       "Gunakan busi dengan spesifikasi yang dianjurkan di buku manual; jangan memaksakan ukuran atau tipe yang tidak sesuai.",
+      "Membuka busi adalah pengecekan perawatan, bukan perbaikan bagian dalam mesin. Jika muncul asap putih tebal, ketukan keras, atau mesin mati berulang, hentikan dan bawa ke bengkel.",
     ],
     steps: [
       "Pastikan motor berada di tempat yang aman, mesin mati, dan sudah dingin.",
-      "Lepas penutup/cap busi dengan hati-hati sesuai akses pada motor kamu.",
+      "Lepas penutup/cap busi (karet penyambung kabel busi) dengan hati-hati sesuai akses pada motor kamu.",
       "Bersihkan area sekitar busi dengan lap agar kotoran tidak masuk saat busi dibuka.",
       "Gunakan kunci busi untuk membuka busi secara perlahan. Jika terasa sangat keras atau seret, jangan dipaksa.",
       "Amati kondisi busi: jika kotor ringan bersihkan permukaannya dengan lap; jika terlihat rusak atau aus, siapkan pengganti yang sesuai manual.",
-      "Pasang busi (lama yang masih baik atau pengganti yang sesuai) dengan tangan terlebih dahulu agar ulir tidak menyilang, lalu kencangkan secukupnya sesuai panduan manual tanpa memaksakan.",
+      "Pasang busi (lama yang masih baik atau pengganti yang sesuai) dengan tangan terlebih dahulu agar ulir (garis sekrup pada busi) tidak menyilang, lalu kencangkan secukupnya sesuai panduan manual tanpa memaksakan.",
       "Pasang kembali cap busi sampai terasa terhubung dengan baik, lalu coba nyalakan mesin untuk memastikan tidak ada gangguan.",
     ],
     when_to_stop: [
       "Busi atau ulir terasa macet, tidak mau masuk lurus, atau ada tanda ulir rusak.",
       "Cap busi, kabel, atau bagian sekitar terlihat retak, hangus, atau berbau gosong.",
       "Mesin tetap sulit menyala, pincang, atau muncul asap/suara tidak biasa setelah pemasangan.",
-      "Kamu ragu spesifikasi busi yang tepat; cek buku manual atau minta bantuan bengkel/teknisi.",
+      "Kamu ragu spesifikasi busi (jenis dan ukuran yang sesuai motor) yang tepat; cek buku manual atau minta bantuan bengkel/teknisi.",
     ],
+    related_glossary_ids: ["busi", "servis-rutin"],
   },
   {
     slug: "setel-rantai",
@@ -106,7 +111,7 @@ export const tutorials: Tutorial[] = [
     difficulty: "sedang",
     estimated_time: "Sekitar 15–25 menit",
     tools: [
-      "Kunci yang sesuai untuk pengatur dan pengunci roda (lihat buku manual)",
+      "Kunci yang sesuai untuk pengatur dan pengunci roda (baut penahan posisi roda; lihat buku manual)",
       "Pelumas rantai",
       "Lap bersih",
       "Standar atau penopang agar motor stabil",
@@ -115,6 +120,7 @@ export const tutorials: Tutorial[] = [
       "Kerjakan saat mesin mati dan motor diposisikan sangat stabil di permukaan datar agar tidak jatuh.",
       "Jauhkan jari dan pakaian longgar dari rantai serta gir; jangan memutar roda saat ada bagian tubuh dekat rantai.",
       "Setel kekencangan rantai sesuai petunjuk pada stiker atau buku manual motor, bukan perkiraan.",
+      "Jangan menyentuh atau melepas komponen rem saat melonggarkan pengunci roda. Posisi rem belakang bisa berubah saat roda digeser; hentikan jika tuas/pedal rem terasa berbeda.",
     ],
     steps: [
       "Parkirkan motor di tempat datar dan pastikan posisinya stabil dengan penopang yang aman.",
@@ -122,14 +128,16 @@ export const tutorials: Tutorial[] = [
       "Lihat tanda acuan dan petunjuk kekencangan rantai pada motor atau di buku manual.",
       "Longgarkan pengunci roda secukupnya sesuai panduan manual agar posisi roda bisa diatur.",
       "Atur kedua sisi penyetel secara seimbang mengikuti tanda acuan agar roda tetap lurus, lalu sesuaikan kekencangan rantai sesuai manual.",
-      "Kencangkan kembali pengunci roda sesuai panduan, pastikan posisi kiri-kanan sejajar, dan periksa kembali putaran roda berjalan bebas tanpa tersangkut.",
+      "Kencangkan kembali pengunci roda sesuai panduan, pastikan posisi kiri-kanan sejajar, dan periksa kembali putaran roda berjalan bebas tanpa tersangkut. Uji tuas/pedal rem secara perlahan saat motor diam dan pastikan rasanya masih normal sebelum memutar roda lebih jauh.",
     ],
     when_to_stop: [
-      "Rantai terlihat sangat kendor, berbunyi keras, berkarat parah, atau ada mata rantai kaku/rusak.",
-      "Gir terlihat aus tajam/bergelombang atau rantai sering lepas dari jalurnya.",
+      "Rantai terlihat sangat kendor, berbunyi keras, berkarat parah, atau ada mata rantai (sambungan pada rantai) kaku/rusak.",
+      "Gir (roda gigi penggerak) terlihat aus tajam/bergelombang atau rantai sering lepas dari jalurnya.",
       "Mur/pengunci sulit dikencangkan, tidak rata, atau roda terlihat tidak lurus setelah penyetelan.",
+      "Rem terasa keras, blong, seret, atau tuas/pedal berubah setelah penyetelan; hentikan dan bawa ke bengkel.",
       "Kamu tidak yakin kekencangan yang benar; hentikan dan minta pengecekan di bengkel.",
     ],
+    related_glossary_ids: ["rantai"],
   },
   {
     slug: "cek-kampas-rem",
@@ -145,6 +153,7 @@ export const tutorials: Tutorial[] = [
       "Ini hanya pengecekan visual/pengamatan dari luar; jangan melepas komponen rem apa pun.",
       "Pastikan motor stabil dan mesin mati saat mengamati area rem agar aman.",
       "Rem adalah bagian penting untuk keselamatan; jika ada keraguan, segera periksakan ke bengkel atau teknisi.",
+      "Cakram adalah piringan rem yang terlihat; tromol adalah drum rem yang tertutup. Dalam tutorial ini keduanya hanya diamati dari luar.",
     ],
     steps: [
       "Parkirkan motor di tempat datar dengan posisi stabil dan mesin dalam keadaan mati.",
@@ -155,10 +164,11 @@ export const tutorials: Tutorial[] = [
     ],
     when_to_stop: [
       "Kampas terlihat sangat tipis, habis, atau permukaan rem tampak tidak rata/berkerak berat.",
-      "Tuas/pedal rem terasa terlalu dalam, sangat keras, blong, atau tidak kembali normal.",
+      "Tuas/pedal rem terasa terlalu dalam, sangat keras, blong (tidak ada tenaga rem saat ditekan), atau tidak kembali normal.",
       "Terlihat cairan di sekitar rem, muncul bau menyengat, atau ada suara gesekan logam saat rem digunakan.",
       "Ada keraguan apa pun tentang kondisi rem; jangan kendarai motor dan bawa ke bengkel/teknisi kompeten.",
     ],
+    related_glossary_ids: ["kampas-rem"],
   },
   {
     slug: "cek-aki-terminal",
@@ -178,7 +188,7 @@ export const tutorials: Tutorial[] = [
     steps: [
       "Matikan motor dan letakkan di tempat yang terang serta stabil.",
       "Lihat area aki dari luar (sesuai akses yang aman pada motor) tanpa membuka atau melepas bagian apa pun.",
-      "Amati kondisi yang terlihat: apakah terminal tampak berkarat/putih kehijauan, kabel terlihat longgar, atau ada kotoran di sekitar aki.",
+      "Amati kondisi yang terlihat: apakah terminal (titik sambungan kabel aki) tampak berkarat/putih kehijauan, kabel terlihat longgar, atau ada kotoran di sekitar aki.",
       "Perhatikan apakah ada tanda fisik tidak normal pada aki yang terlihat dari luar, seperti retak, basah/lembap, atau bentuk tidak wajar.",
       "Jika hanya ada debu ringan di bagian luar yang mudah dijangkau, bersihkan dengan lap kering tanpa menyentuh atau menekan terminal/kabel. Catat temuan untuk disampaikan ke mekanik bila perlu.",
     ],
@@ -188,6 +198,7 @@ export const tutorials: Tutorial[] = [
       "Motor sulit dinyalakan berulang kali atau lampu sangat redup disertai tanda tidak normal di area aki.",
       "Kamu ragu dengan kondisi kelistrikan; hentikan pemeriksaan sendiri dan bawa ke bengkel/teknisi.",
     ],
+    related_glossary_ids: ["aki", "sistem-charging"],
   },
   {
     slug: "bersihkan-filter-udara",
@@ -198,7 +209,7 @@ export const tutorials: Tutorial[] = [
     tools: [
       "Obeng atau alat pembuka yang sesuai (lihat buku manual)",
       "Lap bersih atau kuas halus",
-      "Sumber udara untuk meniup debu ringan (jika tersedia dan aman)",
+      "Kuas halus atau lap kering; udara bertekanan sangat rendah hanya jika buku manual mengizinkan",
     ],
     safety_warnings: [
       "Lakukan saat mesin mati dan dingin, di tempat yang cukup terang dan berventilasi baik.",
@@ -208,17 +219,19 @@ export const tutorials: Tutorial[] = [
     steps: [
       "Parkirkan motor stabil, matikan mesin, dan pastikan kondisi sudah dingin.",
       "Temukan lokasi kotak filter udara dengan melihat buku manual motor.",
-      "Buka penutup rumah filter dengan alat yang sesuai secara perlahan, dan simpan pengikat/baut kecil di tempat aman.",
-      "Keluarkan elemen filter dengan hati-hati, lalu amati kondisinya (berdebu, kotor, sobek, atau rusak).",
-      "Bersihkan debu kering secara lembut menggunakan lap/kuas atau tiupan udara ringan dari sisi yang sesuai; hindari merusak bahan filter.",
-      "Jika filter terlihat rusak atau terlalu kotor, gunakan pengganti yang sesuai buku manual. Pasang kembali filter dan penutup rumahnya dengan benar.",
+      "Buka penutup rumah filter (kotak tempat filter) dengan alat yang sesuai secara perlahan, dan simpan pengikat/baut kecil di tempat aman.",
+      "Keluarkan elemen filter (bagian kertas/kain penyaring) dengan hati-hati, lalu amati kondisinya (berdebu, kotor, sobek, atau rusak).",
+      "Bersihkan debu kering secara lembut menggunakan lap/kuas atau tiupan udara bertekanan sangat rendah sesuai petunjuk buku manual. Jangan pakai bensin, cairan pembersih keras, atau kompresor bertekanan tinggi kecuali manual mengizinkan.",
+      "Jika filter terlihat rusak atau terlalu kotor, gunakan pengganti yang sesuai buku manual. Jika ragu membersihkannya, jangan dipaksa; siapkan pengganti sesuai manual. Pasang kembali filter dan penutup rumahnya dengan benar.",
     ],
     when_to_stop: [
       "Filter sobek, rapuh, basah oleh oli/bahan bakar, atau tidak bisa dibersihkan dengan aman.",
       "Pengikat/penutup rumah filter rusak, hilang, atau tidak bisa terpasang rapat kembali.",
       "Terlihat kotoran berat masuk ke saluran udara atau ada bagian yang pecah di dalam rumah filter.",
+      "Filter masih kotor atau rusak setelah dibersihkan; jangan memaksakan memasangnya kembali, minta bantuan bengkel.",
       "Setelah dipasang kembali motor sulit hidup, brebet berat, atau berperilaku tidak biasa; periksakan ke bengkel.",
     ],
+    related_glossary_ids: ["filter-udara", "karburator", "throttle-body"],
   },
   {
     slug: "cek-lampu-kelistrikan-dasar",
@@ -228,18 +241,19 @@ export const tutorials: Tutorial[] = [
     estimated_time: "Sekitar 10–15 menit",
     tools: [
       "Tempat yang aman untuk mencoba fungsi lampu",
-      "Buku manual motor (untuk letak dan fungsi lampu/sekring yang dapat diperiksa secara aman)",
+      "Buku manual motor (untuk letak lampu dan posisi sekring yang terlihat dari luar)",
     ],
     safety_warnings: [
       "Ini hanya pengecekan visual dan fungsi dari luar; jangan melepas komponen, jangan membuka kelistrikan utama, dan jangan menyentuh bagian bertegangan tinggi.",
+      "Sekring (pengaman listrik yang putus jika arus berlebih) hanya dilihat dari luar; jangan dicabut, diganti, atau disentuh.",
       "Lakukan di tempat aman; jika perlu menyalakan motor, pastikan area berventilasi dan motor stabil.",
       "Jika tercium bau gosong, terlihat asap, kabel panas/meleleh, atau percikan, hentikan dan jangan gunakan motor.",
     ],
     steps: [
       "Parkirkan motor di tempat aman dan stabil. Siapkan catatan sederhana untuk fungsi yang akan diperiksa.",
-      "Nyalakan kunci kontak (dan mesin bila diperlukan) untuk mencoba lampu utama, lampu senja, lampu sein, lampu rem, dan klakson secara bergantian.",
-      "Amati apakah ada lampu yang mati, redup, berkedip tidak normal, atau indikator yang menyala tidak seperti biasanya.",
-      "Lakukan pengamatan visual dari luar pada area yang mudah terlihat: cari kabel yang kendur/terkelupas terlihat, sambungan longgar, atau tanda hangus tanpa menyentuhnya.",
+      "Nyalakan kunci kontak (sakelar utama motor; dan mesin bila diperlukan) untuk mencoba lampu utama, lampu senja, lampu sein, lampu rem, dan klakson secara bergantian.",
+      "Amati apakah ada lampu yang mati, redup, berkedip tidak normal, atau indikator (lampu peringatan di panel) yang menyala tidak seperti biasanya.",
+      "Lakukan pengamatan visual dari luar pada area yang mudah terlihat: cari kabel yang kendur/terkelupas terlihat, sambungan longgar, atau tanda hangus tanpa menyentuhnya. Jika buku manual menunjukkan posisi sekring yang terlihat, amati dari luar saja; jangan melepas penutup atau konektornya.",
       "Matikan kembali motor/kontak setelah selesai dan sampaikan temuan secara spesifik jika perlu ke bengkel/teknisi.",
     ],
     when_to_stop: [
@@ -248,6 +262,7 @@ export const tutorials: Tutorial[] = [
       "Motor mati mendadak, sulit dinyalakan, atau indikator menunjukkan tanda gangguan yang tidak kamu pahami.",
       "Ada keraguan terkait keselamatan kelistrikan; segera bawa ke bengkel atau teknisi kompeten.",
     ],
+    related_glossary_ids: ["aki", "sistem-charging", "sensor"],
   },
   {
     slug: "cek-kebocoran-oli-bahan-bakar",
@@ -270,7 +285,7 @@ export const tutorials: Tutorial[] = [
       "Lihat area bawah dan sekitar motor: periksa apakah ada noda basah, tetesan baru, atau bau oli/bahan bakar.",
       "Gunakan senter untuk mengamati dari luar (tanpa membongkar) area sekitar mesin, selang yang terlihat, sambungan, dan bagian bawah tangki/sekitarnya.",
       "Catat lokasi perkiraan, warna/bau cairan, dan kapan terlihat (misalnya saat motor diam atau setelah digunakan) untuk informasi ke mekanik.",
-      "Jika aman, bersihkan area luar yang jauh dari sumber bocor agar lebih mudah melihat apakah ada rembesan baru, lalu amati kembali tanpa menyalakan mesin bila ada bau bahan bakar.",
+      "Jika aman, bersihkan area luar yang jauh dari sumber bocor agar lebih mudah melihat apakah ada rembesan baru (tetesan kecil), lalu amati kembali tanpa menyalakan mesin bila ada bau bahan bakar.",
     ],
     when_to_stop: [
       "Tercium bau bahan bakar kuat, terlihat tetesan bahan bakar, atau ada cairan yang terus menetes.",
@@ -278,6 +293,7 @@ export const tutorials: Tutorial[] = [
       "Muncul asap, permukaan sangat panas, atau ada tanda selang/kabel dekat sumber bocor yang rusak.",
       "Setiap dugaan kebocoran bahan bakar atau kebocoran yang tidak jelas sumbernya: jangan kendarai motor dan segera ke bengkel/teknisi.",
     ],
+    related_glossary_ids: ["oli-mesin"],
   },
   {
     slug: "perawatan-dasar-motor-listrik",
@@ -291,7 +307,7 @@ export const tutorials: Tutorial[] = [
       "Senter atau lampu penerangan",
     ],
     safety_warnings: [
-      "Hanya lakukan perawatan luar: kebersihan bodi, pengecekan ban, dan pengamatan visual/indikator. Jangan menyentuh baterai, kabel, soket pengisian bagian dalam, atau komponen tegangan tinggi.",
+      "Hanya lakukan perawatan luar: kebersihan bodi, pengecekan ban, dan pengamatan visual/indikator. Jangan menyentuh baterai, kabel, soket pengisian bagian dalam, atau komponen tegangan tinggi (daya listrik besar yang berbahaya).",
       "Jangan membuka penutup, membongkar, atau memperbaiki bagian kelistrikan/baterai sendiri. Ikuti instruksi keselamatan di buku manual motor.",
       "Jika ada bau menyengat/gosong, panas berlebih, asap, percikan, atau indikator gangguan, jauhi motor dan hubungi bengkel/teknisi motor listrik.",
     ],
@@ -308,6 +324,7 @@ export const tutorials: Tutorial[] = [
       "Terlihat kabel/selubung rusak, soket pengisian berubah warna/retak, atau ada bagian bodi dekat komponen listrik yang rusak.",
       "Setiap kondisi yang membuat kamu ragu soal keamanan baterai atau kelistrikan: jangan gunakan/isi daya motor dan hubungi teknisi/bengkel motor listrik kompeten.",
     ],
+    related_glossary_ids: ["sistem-charging", "sensor"],
   },
 ];
 

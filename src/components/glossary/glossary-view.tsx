@@ -91,7 +91,7 @@ export function GlossaryView() {
       ) : (
         <div className="grid gap-3">
           {results.map((item) => (
-            <Card key={item.id}>
+            <Card key={item.id} id={`term-${item.id}`} className="scroll-mt-24">
               <CardHeader className="pb-2">
                 <div className="flex flex-wrap items-start justify-between gap-2">
                   <CardTitle>{item.term}</CardTitle>

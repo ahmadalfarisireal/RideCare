@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 
 import { complaintRules } from "@/data/complaint-rules";
+import { glossaryTerms } from "@/data/glossary";
 import { getAllTutorials, getTutorialBySlug, TUTORIAL_SLUGS } from "@/data/tutorials";
 import { analyze } from "@/lib/complaint-engine";
 
@@ -59,6 +60,24 @@ describe("data tutorial", () => {
       expect(tutorial.steps.every((t) => t.trim().length > 0)).toBe(true);
       expect(tutorial.when_to_stop.length).toBeGreaterThan(0);
       expect(tutorial.when_to_stop.every((t) => t.trim().length > 0)).toBe(true);
+    }
+  });
+
+  it("setiap tutorial memiliki istilah terkait yang valid di kamus", () => {
+    const glossaryIds = new Set(glossaryTerms.map((term) => term.id));
+
+    for (const tutorial of getAllTutorials()) {
+      expect(
+        tutorial.related_glossary_ids.length,
+        `istilah kamus kosong untuk tutorial ${tutorial.slug}`,
+      ).toBeGreaterThan(0);
+
+      for (const id of tutorial.related_glossary_ids) {
+        expect(
+          glossaryIds.has(id),
+          `id kamus tidak ditemukan: ${id} (tutorial ${tutorial.slug})`,
+        ).toBe(true);
+      }
     }
   });
 });
