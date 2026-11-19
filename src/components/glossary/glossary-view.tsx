@@ -1,13 +1,12 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 import { glossaryTerms } from "@/data/glossary";
 import { filterGlossaryTerms } from "@/lib/glossary/search";
-import { Badge } from "@/components/ui/badge";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { GlossaryCard } from "@/components/glossary/glossary-card";
 import { Input } from "@/components/ui/input";
-import { GLOSSARY_CATEGORY_LABELS, type GlossaryCategory } from "@/types/glossary";
+import { GLOSSARY_CATEGORY_LABELS, type GlossaryCategory, type GlossaryTerm } from "@/types/glossary";
 
 type CategoryFilter = "semua" | GlossaryCategory;
 
@@ -30,11 +29,38 @@ function categoryLabel(category: CategoryFilter): string {
 export function GlossaryView() {
   const [query, setQuery] = useState("");
   const [category, setCategory] = useState<CategoryFilter>("semua");
+  const [pendingOpen, setPendingOpen] = useState<{ id: string; nonce: number } | null>(null);
+
+  const termsById = useMemo(
+    () => new Map(glossaryTerms.map((term) => [term.id, term])),
+    [],
+  );
 
   const results = useMemo(
     () => filterGlossaryTerms(glossaryTerms, { query, category }),
     [query, category],
   );
+
+  useEffect(() => {
+    if (!pendingOpen) return;
+    const node = document.getElementById(`term-${pendingOpen.id}`);
+    if (!(node instanceof HTMLDetailsElement)) return;
+
+    node.open = true;
+    const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    node.scrollIntoView({ block: "start", behavior: reduced ? "auto" : "smooth" });
+  }, [pendingOpen, results]);
+
+  const openRelated = (id: string) => {
+    setQuery("");
+    setCategory("semua");
+    setPendingOpen((current) => ({ id, nonce: (current?.nonce ?? 0) + 1 }));
+  };
+
+  const relatedTermsFor = (term: GlossaryTerm): GlossaryTerm[] =>
+    (term.related ?? [])
+      .map((id) => termsById.get(id))
+      .filter((related): related is GlossaryTerm => related !== undefined);
 
   return (
     <div className="space-y-5">
@@ -47,7 +73,7 @@ export function GlossaryView() {
           type="search"
           value={query}
           onChange={(e) => setQuery(e.target.value)}
-          placeholder="Contoh: busi, aki, CVT"
+          placeholder="Contoh: busi, aki, rem, CVT"
           autoComplete="off"
         />
       </div>
@@ -81,41 +107,20 @@ export function GlossaryView() {
       </p>
 
       {results.length === 0 ? (
-        <Card>
-          <CardContent className="p-5">
-            <p className="text-sm text-muted">
-              Istilah tidak ditemukan. Coba kata lain atau pilih kategori &quot;Semua&quot;.
-            </p>
-          </CardContent>
-        </Card>
+        <div className="rounded-xl border border-border bg-surface p-5">
+          <p className="text-sm text-muted">
+            Istilah tidak ditemukan. Coba kata lain atau pilih kategori &quot;Semua&quot;.
+          </p>
+        </div>
       ) : (
         <div className="grid gap-3">
           {results.map((item) => (
-            <Card key={item.id} id={`term-${item.id}`} className="scroll-mt-24">
-              <CardHeader className="pb-2">
-                <div className="flex flex-wrap items-start justify-between gap-2">
-                  <CardTitle>{item.term}</CardTitle>
-                  <Badge variant="outline">{GLOSSARY_CATEGORY_LABELS[item.category]}</Badge>
-                </div>
-              </CardHeader>
-              <CardContent className="space-y-3">
-                <p className="text-sm leading-relaxed text-foreground">{item.definition}</p>
-                {item.related_components.length > 0 ? (
-                  <div className="space-y-1">
-                    <p className="text-xs font-medium uppercase tracking-wide text-muted">
-                      Komponen terkait
-                    </p>
-                    <div className="flex flex-wrap gap-2">
-                      {item.related_components.map((component) => (
-                        <Badge key={component} variant="default">
-                          {component}
-                        </Badge>
-                      ))}
-                    </div>
-                  </div>
-                ) : null}
-              </CardContent>
-            </Card>
+            <GlossaryCard
+              key={item.id}
+              term={item}
+              relatedTerms={relatedTermsFor(item)}
+              onOpenRelated={openRelated}
+            />
           ))}
         </div>
       )}

@@ -27,7 +27,19 @@ export function filterGlossaryTerms(
     if (!query) return true;
 
     const haystack = normalize(
-      [term.term, term.definition, term.related_components.join(" ")].join(" "),
+      [
+        term.term,
+        term.definition,
+        term.related_components.join(" "),
+        term.categoryLabel ?? "",
+        term.short ?? "",
+        term.analogy ?? "",
+        term.how ?? "",
+        (term.signs ?? []).join(" "),
+        term.ignored ?? "",
+        term.diyWhy ?? "",
+        (term.ask ?? []).join(" "),
+      ].join(" "),
     );
     return haystack.includes(query);
   });

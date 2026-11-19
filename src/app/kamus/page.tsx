@@ -12,8 +12,8 @@ export default function KamusPage() {
       <div className="mb-6 space-y-2">
         <h1 className="text-2xl font-bold text-foreground sm:text-3xl">Kamus bengkel</h1>
         <p className="text-sm leading-relaxed text-muted">
-          Penjelasan istilah dan komponen motor dengan bahasa sederhana untuk membantu kamu lebih
-          paham saat merawat atau servis motor.
+          Penjelasan istilah dan komponen motor dengan bahasa sederhana. Klik kartu istilah untuk
+          membuka penjelasan, tanda-tanda, dan pertanyaan untuk mekanik.
         </p>
       </div>
       <GlossaryView />
