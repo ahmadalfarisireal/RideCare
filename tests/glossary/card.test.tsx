@@ -3,6 +3,7 @@ import { describe, expect, it } from "vitest";
 
 import { GlossaryCard } from "@/components/glossary/glossary-card";
 import { glossaryTerms } from "@/data/glossary";
+import type { GlossaryTerm } from "@/types/glossary";
 
 describe("GlossaryCard", () => {
   it("menampilkan detail dan meter untuk istilah dengan konten baru", () => {
@@ -18,13 +19,19 @@ describe("GlossaryCard", () => {
   });
 
   it("tetap menampilkan istilah lama tanpa field baru", () => {
-    const sistemCharging = glossaryTerms.find((term) => term.id === "sistem-charging");
-    expect(sistemCharging).toBeDefined();
-    const html = renderToStaticMarkup(<GlossaryCard term={sistemCharging!} relatedTerms={[]} />);
+    const legacyTerm: GlossaryTerm = {
+      id: "legacy-term",
+      term: "Istilah lama",
+      definition: "Definisi lama tanpa field tambahan.",
+      category: "perawatan",
+      related_components: ["Komponen lama"],
+    };
+    const html = renderToStaticMarkup(<GlossaryCard term={legacyTerm} relatedTerms={[]} />);
 
-    expect(html).toContain("Sistem charging");
+    expect(html).toContain("Istilah lama");
     expect(html).toContain("Penjelasan");
     expect(html).toContain("Komponen terkait");
+    expect(html).toContain("Komponen lama");
     expect(html).not.toContain("Bayangkan begini");
   });
 });
