@@ -162,7 +162,7 @@ export default function HomePage() {
             {steps.map((step) => (
               <Card key={step.number}>
                 <CardContent className="p-5">
-                  <span className="grid size-9 place-items-center rounded-full bg-accent text-sm font-bold text-background">
+                  <span className="grid size-9 place-items-center rounded-full bg-accent text-sm font-bold text-accent-ink">
                     {step.number}
                   </span>
                   <h3 className="mt-4 text-base font-semibold">

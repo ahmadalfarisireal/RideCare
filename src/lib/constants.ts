@@ -25,3 +25,10 @@ export const NAV_LINKS = [
   { href: "/kamus", label: "Kamus" },
   { href: "/tentang", label: "Tentang" },
 ] as const;
+
+export const PRIMARY_TABS = [
+  { href: "/keluhan", label: "Keluhan" },
+  { href: "/kamus", label: "Kamus" },
+  { href: "/tutorial", label: "Tutorial" },
+  { href: "/checklist", label: "Anti Getok" },
+] as const;

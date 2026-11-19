@@ -1,87 +1,65 @@
 "use client";
 
 import Link from "next/link";
-import { useState } from "react";
+import { usePathname } from "next/navigation";
 
-import { buttonVariants } from "@/components/ui/button";
-import { CloseIcon, MenuIcon } from "@/components/ui/icons";
 import { Logo } from "@/components/ui/logo";
-import { NAV_LINKS } from "@/lib/constants";
+import { PRIMARY_TABS } from "@/lib/constants";
+import { cn } from "@/lib/utils";
+
+function isTabActive(href: string, pathname: string | null): boolean {
+  if (!pathname) return false;
+  if (href === "/keluhan") {
+    return ["/keluhan", "/hasil", "/pesan-mekanik"].includes(pathname);
+  }
+  if (href === "/tutorial") {
+    return pathname === "/tutorial" || pathname.startsWith("/tutorial/");
+  }
+  return pathname === href;
+}
 
 export function Header() {
-  const [isOpen, setIsOpen] = useState(false);
+  const pathname = usePathname();
 
   return (
-    <header className="sticky top-0 z-50 border-b border-border/80 bg-background/90 backdrop-blur">
-      <div className="mx-auto flex w-full max-w-5xl items-center justify-between gap-3 px-4 py-3 sm:px-6">
-        <Logo />
-
-        <nav
-          aria-label="Navigasi utama"
-          className="hidden items-center gap-1 md:flex"
-        >
-          {NAV_LINKS.map((link) => (
+    <header className="sticky top-0 z-50 border-b border-border bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/85">
+      <div className="mx-auto w-full max-w-5xl px-3 pt-3 sm:px-6">
+        <div className="flex items-center justify-between gap-3 pb-3">
+          <Logo />
+          <div className="flex items-center gap-3 sm:gap-4">
+            <span className="hidden font-mono text-[10px] uppercase tracking-[0.08em] text-muted sm:inline">
+              Pahami motormu, hindari digetok
+            </span>
             <Link
-              key={link.href}
-              href={link.href}
-              className="rounded-lg px-3 py-2 text-sm font-medium text-muted transition-colors hover:bg-surface-2 hover:text-foreground"
+              href="/tentang"
+              className="rounded-md px-1 py-1 font-display text-sm font-bold uppercase tracking-wide text-muted transition-colors hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
             >
-              {link.label}
+              Tentang
             </Link>
-          ))}
-        </nav>
-
-        <div className="hidden md:block">
-          <Link href="/keluhan" className={buttonVariants({ size: "sm" })}>
-            Mulai
-          </Link>
+          </div>
         </div>
 
-        <button
-          type="button"
-          onClick={() => setIsOpen((open) => !open)}
-          aria-expanded={isOpen}
-          aria-controls="mobile-menu"
-          aria-label={isOpen ? "Tutup menu" : "Buka menu"}
-          className="inline-flex size-10 items-center justify-center rounded-lg border border-border bg-surface text-foreground transition-colors hover:bg-surface-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent md:hidden"
-        >
-          {isOpen ? (
-            <CloseIcon className="size-5" />
-          ) : (
-            <MenuIcon className="size-5" />
-          )}
-        </button>
-      </div>
-
-      {isOpen ? (
-        <div
-          id="mobile-menu"
-          className="border-t border-border bg-background md:hidden"
-        >
-          <nav
-            aria-label="Navigasi mobile"
-            className="mx-auto flex w-full max-w-5xl flex-col gap-1 px-4 py-4 sm:px-6"
-          >
-            {NAV_LINKS.map((link) => (
+        <nav aria-label="Menu utama" className="grid grid-cols-4 gap-1">
+          {PRIMARY_TABS.map((tab) => {
+            const active = isTabActive(tab.href, pathname);
+            return (
               <Link
-                key={link.href}
-                href={link.href}
-                onClick={() => setIsOpen(false)}
-                className="rounded-lg px-3 py-2.5 text-sm font-medium text-muted transition-colors hover:bg-surface-2 hover:text-foreground"
+                key={tab.href}
+                href={tab.href}
+                aria-current={active ? "page" : undefined}
+                className={cn(
+                  "min-w-0 border-b-[3px] px-1 pb-2 pt-1 text-center font-display text-[13px] font-bold uppercase leading-none tracking-[0.04em] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent sm:text-base",
+                  active
+                    ? "border-accent text-foreground"
+                    : "border-transparent text-muted hover:text-foreground",
+                )}
               >
-                {link.label}
+                {tab.label}
               </Link>
-            ))}
-            <Link
-              href="/keluhan"
-              onClick={() => setIsOpen(false)}
-              className={buttonVariants({ className: "mt-2 w-full" })}
-            >
-              Ceritakan keluhan
-            </Link>
-          </nav>
-        </div>
-      ) : null}
+            );
+          })}
+        </nav>
+      </div>
     </header>
   );
 }

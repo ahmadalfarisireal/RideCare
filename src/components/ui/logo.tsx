@@ -14,7 +14,7 @@ export function Logo({ className }: { className?: string }) {
     >
       <span
         aria-hidden="true"
-        className="grid size-8 place-items-center rounded-lg bg-accent text-sm font-black text-background"
+        className="grid size-8 place-items-center rounded-lg bg-accent text-sm font-black text-accent-ink"
       >
         R
       </span>
