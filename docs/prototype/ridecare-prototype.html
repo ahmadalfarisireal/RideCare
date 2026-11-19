@@ -1,0 +1,794 @@
+<title>RideCare</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700&family=Barlow:wght@400;500;600&family=IBM+Plex+Mono:wght@500&display=swap">
+<style>
+/* Layout: instrument-cluster look. Sticky header with 4 tabs, one panel at a time.
+   Keluhan = chat flow ending in a gauge; Kamus = searchable accordion; Tutorial = checkable steps; Anti Getok = checklist. */
+:root{
+  --bg:#121110; --surface:#1b1a17; --surface-2:#252320; --line:#37332d;
+  --fg:#f3efe6; --muted:#a8a193;
+  --accent:#ffc21a; --accent-ink:#1a1400; --accent-text:#ffc21a;
+  --good:#38c978; --warn:#ff8a1f; --bad:#ff5040;
+  --display:'Barlow Condensed','Arial Narrow',sans-serif;
+  --body:'Barlow',system-ui,-apple-system,'Segoe UI',sans-serif;
+  --mono:'IBM Plex Mono',ui-monospace,Menlo,monospace;
+  color-scheme:dark;
+}
+@media (prefers-color-scheme: light){
+  :root:not([data-theme="dark"]){
+    --bg:#eeeeea; --surface:#ffffff; --surface-2:#e5e4de; --line:#cfccc2;
+    --fg:#1c1a16; --muted:#5e5a50;
+    --accent:#ffc21a; --accent-ink:#1a1400; --accent-text:#7a5200;
+    --good:#13803f; --warn:#b85200; --bad:#c4281a;
+    color-scheme:light;
+  }
+}
+:root[data-theme="light"]{
+  --bg:#eeeeea; --surface:#ffffff; --surface-2:#e5e4de; --line:#cfccc2;
+  --fg:#1c1a16; --muted:#5e5a50;
+  --accent:#ffc21a; --accent-ink:#1a1400; --accent-text:#7a5200;
+  --good:#13803f; --warn:#b85200; --bad:#c4281a;
+  color-scheme:light;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  background:var(--bg);color:var(--fg);font:400 16px/1.6 var(--body);
+  padding-left:max(16px,env(safe-area-inset-left,0px));
+  padding-right:max(16px,env(safe-area-inset-right,0px));
+  padding-block:0 56px;
+}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);background:var(--bg);z-index:10}
+.wrap{max-width:880px;margin:0 auto}
+button,input{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+h1,h2,h3{font-family:var(--display);font-weight:700;line-height:1.1;margin:0;text-wrap:balance;letter-spacing:.01em}
+p{margin:0}
+.mono{font-family:var(--mono);font-size:12px;letter-spacing:.08em;text-transform:uppercase}
+
+/* header */
+.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:9;background:var(--bg);border-bottom:1px solid var(--line)}
+.top .wrap{padding-block:12px 0}
+.brand{display:flex;align-items:center;gap:12px;justify-content:space-between;flex-wrap:wrap}
+.logo{display:flex;align-items:center;gap:10px}
+.logo svg{width:34px;height:34px;flex:none}
+.logo b{font:700 28px/1 var(--display);letter-spacing:.02em}
+.tag{color:var(--muted)}
+.tabs{display:grid;grid-template-columns:repeat(4,1fr);gap:4px;margin-top:10px}
+.tabs a{
+  text-align:center;text-decoration:none;color:var(--muted);padding:10px 4px 11px;
+  font:700 17px/1 var(--display);letter-spacing:.04em;text-transform:uppercase;
+  border-bottom:3px solid transparent;min-width:0;white-space:nowrap;
+}
+.tabs a:hover{color:var(--fg)}
+.tabs a[aria-selected="true"]{color:var(--fg);border-bottom-color:var(--accent)}
+
+main{padding-block:24px 0}
+.intro{display:grid;gap:6px;margin-bottom:18px}
+.intro h1{font-size:clamp(34px,7vw,52px)}
+.intro p{color:var(--muted);max-width:60ch}
+
+/* chat */
+.chat{display:grid;gap:12px}
+.row{display:flex;gap:10px;align-items:flex-start;animation:rise .35s ease both}
+.row.me{justify-content:flex-end}
+.av{flex:none;width:34px;height:34px;border-radius:50%;background:var(--accent);color:var(--accent-ink);display:grid;place-items:center;font:600 12px var(--mono)}
+.bub{max-width:min(560px,85%);padding:10px 14px;border-radius:4px 16px 16px 16px;background:var(--surface);border:1px solid var(--line);min-width:0;overflow-wrap:anywhere}
+.me .bub{background:var(--accent);color:var(--accent-ink);border-color:transparent;border-radius:16px 4px 16px 16px;font-weight:600}
+.choices{display:flex;flex-wrap:wrap;gap:8px;padding-left:44px;animation:rise .35s ease both}
+.choices.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr))}
+.chip{
+  display:flex;flex-direction:column;align-items:flex-start;gap:2px;text-align:left;cursor:pointer;
+  min-height:44px;padding:10px 14px;border-radius:12px;background:var(--surface);border:1px solid var(--line);
+  transition:border-color .15s,transform .15s,background .15s;min-width:0;
+}
+.chip:hover{border-color:var(--accent);transform:translateY(-1px)}
+.chip:active{transform:translateY(0)}
+.c-l{font-weight:600}
+.c-s{font-size:13px;color:var(--muted)}
+.chip.ghost{background:transparent;border-style:dashed;color:var(--accent-text);justify-content:center}
+@keyframes rise{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+
+/* result */
+.result{display:grid;gap:16px;margin-top:6px;animation:rise .4s ease both}
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:18px;min-width:0}
+.gauge-card{display:grid;grid-template-columns:minmax(0,260px) minmax(0,1fr);gap:18px;align-items:center}
+.gauge{width:100%;height:auto;display:block}
+.needle{transform-origin:120px 120px;transition:transform 1.2s cubic-bezier(.3,1.35,.5,1)}
+.zone{transition:opacity .5s}
+.glabels{display:grid;grid-template-columns:repeat(3,1fr);gap:4px;margin-top:2px}
+.glabels span{font:500 10px var(--mono);text-align:center;color:var(--muted);text-transform:uppercase;letter-spacing:.04em;line-height:1.3}
+.glabels span.on{color:var(--fg)}
+.urg-title{font-size:clamp(28px,5vw,38px)}
+.urg-title.aman{color:var(--good)} .urg-title.segera{color:var(--warn)} .urg-title.jangan{color:var(--bad)}
+.gauge-card p{margin-top:8px;max-width:52ch}
+.summary{color:var(--muted)}
+.summary b{color:var(--fg);font-weight:600}
+.sec-h{font-size:24px;margin-bottom:10px}
+.cause{border:1px solid var(--line);border-radius:12px;background:var(--surface-2);overflow:hidden}
+.cause+.cause{margin-top:10px}
+.cause summary{list-style:none;cursor:pointer;display:grid;grid-template-columns:minmax(0,1fr) auto;gap:6px 12px;align-items:center;padding:14px}
+.cause summary::-webkit-details-marker{display:none}
+.cause summary::after{content:"";grid-column:2;grid-row:1/3;width:9px;height:9px;border-right:2px solid var(--muted);border-bottom:2px solid var(--muted);transform:rotate(45deg);transition:transform .2s;margin-right:4px}
+.cause[open] summary::after{transform:rotate(-135deg)}
+.c-name{font:700 21px/1.15 var(--display)}
+.c-meta{display:flex;align-items:center;gap:10px;flex-wrap:wrap;grid-column:1}
+.pips{display:inline-flex;gap:3px}
+.pips i{width:16px;height:6px;border-radius:2px;background:var(--line)}
+.pips i.on{background:var(--accent)}
+.badge{font:500 11px var(--mono);letter-spacing:.06em;text-transform:uppercase;padding:2px 8px;border-radius:99px;border:1px solid var(--line);color:var(--muted)}
+.badge.lock{color:var(--bad);border-color:var(--bad)}
+.cbody{display:grid;gap:12px;padding:0 14px 16px}
+.cbody h4{margin:0 0 2px;font:500 11px var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.cbody h4.ok{color:var(--good)} .cbody h4.no{color:var(--bad)}
+.tip{display:flex;gap:12px;align-items:flex-start;padding:14px;border-radius:12px;background:var(--surface-2);border:1px solid var(--line)}
+.tip b{font:500 11px var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--accent-text);flex:none;padding-top:3px}
+.checks{display:grid;gap:8px}
+.check{display:flex;gap:12px;align-items:flex-start;padding:10px 12px;border-radius:10px;border:1px solid var(--line);cursor:pointer;background:var(--surface);transition:border-color .15s,background .15s}
+.check:hover{border-color:var(--accent)}
+.check input{appearance:none;flex:none;width:22px;height:22px;margin:1px 0 0;border:2px solid var(--muted);border-radius:6px;display:grid;place-items:center;cursor:pointer;transition:background .15s,border-color .15s}
+.check input:checked{background:var(--accent);border-color:var(--accent)}
+.check input:checked::after{content:"";width:6px;height:11px;border:solid var(--accent-ink);border-width:0 3px 3px 0;transform:rotate(45deg) translate(-1px,-1px)}
+.check:has(input:checked){background:var(--surface-2)}
+.check:has(input:checked) .ck-t{color:var(--muted);text-decoration:line-through}
+.ck-t{font-weight:500}
+.ck-w{display:block;font-size:14px;color:var(--muted);margin-top:2px}
+.wa{font:400 14px/1.55 var(--mono);white-space:pre-wrap;background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:14px;overflow-wrap:anywhere;user-select:text}
+.btn{display:inline-flex;align-items:center;justify-content:center;min-height:44px;padding:10px 18px;border-radius:10px;border:1px solid var(--line);background:var(--surface-2);cursor:pointer;font-weight:600;transition:border-color .15s,transform .15s}
+.btn:hover{border-color:var(--accent)}
+.btn.pri{background:var(--accent);color:var(--accent-ink);border-color:transparent}
+.btn-row{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px}
+.disc{font-size:14px;color:var(--muted);border-left:3px solid var(--line);padding-left:12px}
+.lock-card{border:1px solid var(--bad);border-radius:12px;padding:14px;display:grid;gap:4px}
+.lock-card b{font:700 20px var(--display);color:var(--bad)}
+
+/* kamus */
+.toolbar{display:grid;gap:12px;margin-bottom:16px}
+.search{width:100%;min-height:48px;padding:10px 14px;border-radius:12px;border:1px solid var(--line);background:var(--surface)}
+.search::placeholder{color:var(--muted)}
+.filters{display:flex;gap:8px;flex-wrap:wrap}
+.fchip{min-height:40px;padding:6px 14px;border-radius:99px;border:1px solid var(--line);background:transparent;cursor:pointer;font-weight:600;color:var(--muted)}
+.fchip[aria-pressed="true"]{background:var(--accent);color:var(--accent-ink);border-color:transparent}
+.count{color:var(--muted)}
+.terms{display:grid;gap:10px}
+.term{border:1px solid var(--line);border-radius:14px;background:var(--surface);overflow:hidden}
+.term summary{list-style:none;cursor:pointer;display:grid;grid-template-columns:minmax(0,1fr) auto;gap:4px 12px;align-items:center;padding:16px}
+.term summary::-webkit-details-marker{display:none}
+.term summary::after{content:"";grid-column:2;grid-row:1/3;width:9px;height:9px;border-right:2px solid var(--muted);border-bottom:2px solid var(--muted);transform:rotate(45deg);transition:transform .2s}
+.term[open] summary::after{transform:rotate(-135deg)}
+.t-name{font:700 26px/1.1 var(--display)}
+.t-short{grid-column:1;color:var(--muted);font-size:15px}
+.t-cat{font:500 11px var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--accent-text)}
+.tbody{display:grid;gap:16px;padding:0 16px 18px}
+.tbody h4{margin:0 0 4px;font:500 11px var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.analogy{background:var(--accent);color:var(--accent-ink);border-radius:12px;padding:14px 16px}
+.analogy h4{color:var(--accent-ink);opacity:.7}
+.analogy p{font-weight:600;font-size:18px;line-height:1.4}
+.tbody ul{margin:0;padding-left:20px;display:grid;gap:4px}
+.meter{display:grid;grid-template-columns:repeat(3,1fr);gap:4px}
+.meter span{text-align:center;padding:8px 4px;border-radius:8px;font:500 11px var(--mono);letter-spacing:.05em;text-transform:uppercase;background:var(--surface-2);color:var(--muted);border:1px solid transparent}
+.meter span.on.g{background:var(--good);color:#06140c} .meter span.on.o{background:var(--warn);color:#1c0c00} .meter span.on.r{background:var(--bad);color:#1c0300}
+.related{display:flex;gap:8px;flex-wrap:wrap}
+.related button{min-height:36px;padding:4px 12px;border-radius:99px;border:1px solid var(--line);background:transparent;cursor:pointer;font-weight:600;color:var(--accent-text)}
+.related button:hover{border-color:var(--accent)}
+.empty{padding:28px 16px;text-align:center;color:var(--muted);border:1px dashed var(--line);border-radius:14px}
+
+/* tutorial + anti getok */
+.head-row{display:flex;gap:16px;align-items:center;justify-content:space-between;flex-wrap:wrap;margin-bottom:16px}
+.head-row h2{font-size:clamp(28px,5vw,38px)}
+.meta{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}
+.ring{position:relative;width:76px;height:76px;flex:none}
+.ring svg{width:100%;height:100%;transform:rotate(-90deg)}
+.ring .num{position:absolute;inset:0;display:grid;place-items:center;font:700 22px var(--display)}
+.bar{height:10px;border-radius:99px;background:var(--surface-2);overflow:hidden;min-width:140px;flex:1}
+.bar i{display:block;height:100%;width:0;background:var(--accent);transition:width .4s ease}
+.group{display:grid;gap:8px;margin-bottom:22px}
+.group h3{font-size:22px}
+.note{margin-top:14px;padding:14px;border-radius:12px;display:grid;gap:4px}
+.note.good{border:1px solid var(--good)} .note.bad{border:1px solid var(--bad)}
+.note h4{margin:0;font:500 11px var(--mono);letter-spacing:.08em;text-transform:uppercase}
+.note.good h4{color:var(--good)} .note.bad h4{color:var(--bad)}
+.done-msg{font-weight:600;color:var(--good);min-height:1.6em}
+.phrase{display:flex;gap:12px;align-items:center;justify-content:space-between;flex-wrap:wrap;padding:12px 14px;border:1px solid var(--line);border-radius:12px;background:var(--surface)}
+.phrase p{flex:1 1 220px;min-width:0}
+.foot{margin-top:40px;padding-top:18px;border-top:1px solid var(--line);color:var(--muted);font-size:14px}
+.toast{position:fixed;left:50%;bottom:calc(16px + env(safe-area-inset-bottom,0px));transform:translate(-50%,20px);background:var(--fg);color:var(--bg);padding:10px 16px;border-radius:99px;font-weight:600;opacity:0;pointer-events:none;transition:opacity .2s,transform .2s;z-index:20}
+.toast.show{opacity:1;transform:translate(-50%,0)}
+
+@media (max-width:640px){
+  .gauge-card{grid-template-columns:1fr}
+  .gauge{max-width:280px;margin:0 auto}
+  .choices{padding-left:0}
+  .tabs a{font-size:14px;letter-spacing:.02em}
+}
+.gauge-card{scroll-margin-top:130px}
+@media (prefers-reduced-motion: reduce){
+  *{animation:none!important;transition:none!important}
+  html{scroll-behavior:auto}
+}
+</style>
+
+<header class="top">
+  <div class="wrap">
+    <div class="brand">
+      <div class="logo">
+        <svg viewBox="0 0 40 40" aria-hidden="true"><circle cx="20" cy="22" r="16" fill="none" stroke="var(--line)" stroke-width="4"/><path d="M6 25a14 14 0 0 1 28 0" fill="none" stroke="var(--accent)" stroke-width="4" stroke-linecap="round"/><path d="M20 24l8-9" stroke="var(--fg)" stroke-width="3" stroke-linecap="round"/><circle cx="20" cy="24" r="3" fill="var(--fg)"/></svg>
+        <b>RideCare</b>
+      </div>
+      <span class="mono tag">Pahami motormu, hindari digetok</span>
+    </div>
+    <nav class="tabs" role="tablist" aria-label="Menu utama">
+      <a href="#keluhan" id="t-keluhan" role="tab">Keluhan</a>
+      <a href="#kamus" id="t-kamus" role="tab">Kamus</a>
+      <a href="#tutorial" id="t-tutorial" role="tab">Tutorial</a>
+      <a href="#anti-getok" id="t-anti-getok" role="tab">Anti Getok</a>
+    </nav>
+  </div>
+</header>
+
+<main class="wrap">
+  <!-- KELUHAN -->
+  <section id="p-keluhan" role="tabpanel" aria-labelledby="t-keluhan">
+    <div class="intro">
+      <h1>Ceritakan keluhan motormu.</h1>
+      <p>Jawab beberapa pertanyaan singkat. Kamu dapat dugaan awal, tingkat urgensi, dan pesan siap kirim untuk mekanik.</p>
+    </div>
+    <div id="chat" class="chat" aria-live="polite"></div>
+  </section>
+
+  <!-- KAMUS -->
+  <section id="p-kamus" role="tabpanel" aria-labelledby="t-kamus" hidden>
+    <div class="intro">
+      <h1>Kamus Bengkel</h1>
+      <p>Istilah bengkel dijelaskan dengan bahasa sehari-hari. Buka satu istilah untuk melihat analogi, tanda-tanda, dan apa yang boleh kamu cek sendiri.</p>
+    </div>
+    <div class="toolbar">
+      <input id="kamus-q" class="search" type="search" placeholder="Cari istilah, misalnya busi atau brebet" aria-label="Cari istilah">
+      <div id="kamus-filters" class="filters" role="group" aria-label="Kategori"></div>
+      <p id="kamus-count" class="count" aria-live="polite"></p>
+    </div>
+    <div id="terms" class="terms"></div>
+    <div id="kamus-empty" class="empty" hidden>Belum ada istilah yang cocok. Coba kata lain, atau pilih kategori Semua.</div>
+  </section>
+
+  <!-- TUTORIAL -->
+  <section id="p-tutorial" role="tabpanel" aria-labelledby="t-tutorial" hidden>
+    <div class="head-row">
+      <div>
+        <p class="mono" style="color:var(--accent-text)">Contoh format tutorial</p>
+        <h2>Mengecek tekanan ban</h2>
+        <div class="meta"><span class="badge">Mudah</span><span class="badge">Semua jenis motor</span><span class="badge">Alat: pengukur tekanan ban</span></div>
+      </div>
+      <div class="ring" aria-label="Progres langkah">
+        <svg viewBox="0 0 60 60"><circle cx="30" cy="30" r="26" fill="none" stroke="var(--surface-2)" stroke-width="6"/><circle id="ring-c" cx="30" cy="30" r="26" fill="none" stroke="var(--accent)" stroke-width="6" stroke-linecap="round" stroke-dasharray="163.36" stroke-dashoffset="163.36" style="transition:stroke-dashoffset .4s"/></svg>
+        <div class="num" id="ring-n">0/6</div>
+      </div>
+    </div>
+    <div class="panel" style="margin-bottom:16px">
+      <h4 class="mono" style="margin:0 0 4px;color:var(--muted)">Kenapa ini perlu</h4>
+      <p>Tekanan ban yang tepat membuat motor stabil, hemat, dan ban lebih awet. Ban yang kurang angin terasa berat dan lebih cepat aus di bagian tepinya. Cek seminggu sekali atau sebelum perjalanan jauh.</p>
+    </div>
+    <div id="tut-steps" class="checks"></div>
+    <p id="tut-done" class="done-msg" style="margin-top:12px" aria-live="polite"></p>
+    <div class="note good">
+      <h4>Tandanya sudah benar</h4>
+      <p>Angka di alat ukur sama dengan angka anjuran pada stiker atau buku manual, dan tidak turun lagi dalam beberapa hari.</p>
+    </div>
+    <div class="note bad">
+      <h4>Berhenti dan ke bengkel kalau</h4>
+      <p>Ada benda tajam tertancap, benjolan di sisi ban, atau retakan. Ke bengkel juga kalau tekanan turun lagi dalam waktu singkat setelah diisi.</p>
+    </div>
+    <p class="disc" style="margin-top:16px">Semua tutorial RideCare memakai format yang sama: kenapa perlu, kapan dilakukan, langkah dengan alasan, tanda berhasil, dan kapan harus berhenti.</p>
+  </section>
+
+  <!-- ANTI GETOK -->
+  <section id="p-anti-getok" role="tabpanel" aria-labelledby="t-anti-getok" hidden>
+    <div class="intro">
+      <h1>Checklist Anti Getok Harga</h1>
+      <p>Centang yang sudah kamu siapkan. Tujuannya satu: kamu mengerti apa yang dikerjakan dan kamu yang memutuskan.</p>
+    </div>
+    <div class="head-row" style="margin-bottom:20px">
+      <p id="ag-text" style="font-weight:600">Siap 0 dari 8</p>
+      <div class="bar" role="progressbar" aria-valuemin="0" aria-valuemax="8" aria-valuenow="0" id="ag-bar"><i id="ag-fill"></i></div>
+    </div>
+    <div id="ag-groups"></div>
+    <h2 class="sec-h" style="margin-top:8px">Kalimat siap pakai</h2>
+    <div id="phrases" class="checks"></div>
+  </section>
+
+  <p class="foot">RideCare membantu menyusun keluhan dan memberi kemungkinan pemeriksaan awal. Hasilnya bukan diagnosis pasti. Untuk pemeriksaan, perbaikan, dan keputusan mengganti komponen, gunakan teknisi atau bengkel yang kompeten. Jangan melakukan perbaikan berisiko kalau kamu tidak yakin. Ini prototipe tampilan dan isi; data contoh di sini belum menggantikan mesin aturan di aplikasi.</p>
+</main>
+<div id="toast" class="toast" role="status"></div>
+
+<script>
+(function(){
+'use strict';
+var reduce=window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches;
+var $=function(s,r){return (r||document).querySelector(s);};
+var el=function(t,c,h){var e=document.createElement(t);if(c)e.className=c;if(h!=null)e.innerHTML=h;return e;};
+var esc=function(s){return String(s).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];});};
+var pick=function(a){return a[Math.floor(Math.random()*a.length)];};
+
+/* ---------- routing ---------- */
+var TABS=['keluhan','kamus','tutorial','anti-getok'];
+function route(){
+  var h=(location.hash||'').slice(1);
+  if(TABS.indexOf(h)<0)h='keluhan';
+  TABS.forEach(function(t){
+    $('#p-'+t).hidden=(t!==h);
+    var b=$('#t-'+t);b.setAttribute('aria-selected',t===h?'true':'false');
+  });
+}
+window.addEventListener('hashchange',route);route();
+
+/* ---------- toast + copy ---------- */
+var toastT;
+function toast(msg){var t=$('#toast');t.textContent=msg;t.classList.add('show');clearTimeout(toastT);toastT=setTimeout(function(){t.classList.remove('show');},1800);}
+function copyText(text,selectNode,btn){
+  var done=function(ok){
+    if(ok){toast('Tersalin');}
+    else{
+      if(selectNode){var r=document.createRange();r.selectNodeContents(selectNode);var s=getSelection();s.removeAllRanges();s.addRange(r);}
+      toast('Teks dipilih, tekan salin di perangkatmu');
+    }
+  };
+  try{navigator.clipboard.writeText(text).then(function(){done(true);},function(){done(false);});}
+  catch(e){done(false);}
+}
+
+/* ---------- data: diagnosis ---------- */
+var MOTORS=[
+  {id:'matik',label:'Matik',sub:'Tanpa kopling dan gigi',s:'matik'},
+  {id:'manual',label:'Bebek atau sport',sub:'Pakai gigi manual',s:'bebek atau sport (gigi manual)'},
+  {id:'listrik',label:'Motor listrik',sub:'Tanpa bensin dan busi',s:'listrik'}
+];
+var Q={
+  when:{t:'Kapan masalahnya paling terasa?',o:[
+    ['dingin','Pagi atau saat mesin masih dingin','Masalah paling terasa saat mesin dingin'],
+    ['panas','Setelah mesin panas','Masalah muncul setelah mesin panas'],
+    ['always','Selalu, dingin maupun panas','Masalah muncul baik saat dingin maupun panas']]},
+  starter:{t:'Saat tombol starter ditekan, bagaimana bunyinya?',o:[
+    ['lemah','Lemah atau ngik-ngik, mesin tidak berputar','Starter berbunyi lemah dan mesin tidak berputar'],
+    ['putar','Mesin berputar normal tapi tidak mau menyala','Mesin berputar normal saat distarter tetapi tidak menyala'],
+    ['diam','Tidak ada bunyi sama sekali','Starter tidak mengeluarkan bunyi sama sekali']]},
+  lamp:{t:'Apakah lampu terlihat redup, terutama saat motor idle?',o:[
+    ['ya','Ya, lampu terlihat redup','Lampu terlihat redup saat idle'],
+    ['tidak','Tidak, lampu normal','Lampu terlihat normal']]},
+  load:{t:'Kapan brebetnya terasa?',o:[
+    ['gas','Saat gas ditarik mendadak','Brebet terasa saat gas ditarik mendadak'],
+    ['beban','Di tanjakan atau saat membawa beban','Brebet terasa di tanjakan atau saat membawa beban'],
+    ['semua','Hampir setiap saat','Brebet terasa hampir setiap saat']]},
+  busibaru:{t:'Busi sudah diganti baru-baru ini?',o:[
+    ['sudah','Sudah','Busi sudah diganti baru-baru ini'],
+    ['belum','Belum','Busi belum diganti baru-baru ini'],
+    ['lupa','Lupa kapan terakhir','Tidak ingat kapan busi terakhir diganti']]},
+  remtype:{t:'Apa yang terasa atau terdengar dari rem?',o:[
+    ['cit','Bunyi cit tipis saat rem ditarik','Rem berbunyi cit tipis saat ditarik'],
+    ['logam','Bunyi logam bergesek yang kasar','Terdengar bunyi logam bergesek saat mengerem'],
+    ['dalam','Tuas rem terasa lebih dalam atau empuk','Tuas rem terasa lebih dalam atau empuk']]},
+  getartype:{t:'Seperti apa getar atau tarikan kasarnya?',o:[
+    ['getar','Bergetar saat mulai jalan','Motor bergetar saat mulai jalan'],
+    ['raung','Mesin meraung tapi laju tidak ikut','Mesin meraung tetapi laju motor tidak ikut naik'],
+    ['decit','Ada bunyi berdecit atau menggerus','Terdengar bunyi berdecit atau menggerus saat berjalan']]},
+  akibaru:{t:'Aki sudah pernah diganti?',o:[
+    ['ya','Sudah, tapi cepat habis lagi','Aki sudah diganti tetapi cepat habis lagi'],
+    ['belum','Belum pernah diganti','Aki belum pernah diganti'],
+    ['awet','Sudah diganti dan awet','Aki sudah diganti dan awet']]}
+};
+var SYMS=[
+  {id:'susah_hidup',label:'Susah dihidupkan',hint:'Mesin lama atau tidak mau menyala',s:'Susah dihidupkan',q:['when','starter'],tip:'Aki yang baru diganti tapi cepat habis lagi sering kali bukan salah akinya, melainkan pengisiannya.'},
+  {id:'brebet',label:'Brebet saat digas',hint:'Tersendat atau tenaga putus-putus',s:'Brebet atau tersendat saat digas',q:['load','busibaru'],tip:'Busi dan filter udara termasuk penyebab brebet yang paling sering, dan keduanya masuk perawatan rutin.'},
+  {id:'mati_idle',label:'Mati sendiri saat berhenti',hint:'Misalnya di lampu merah',s:'Mati sendiri saat berhenti',q:['when','lamp'],tip:'Mati hanya saat berhenti biasanya berkaitan dengan putaran idle, bukan dengan tenaga saat berjalan.'},
+  {id:'rem',label:'Rem berbunyi atau terasa aneh',hint:'Bunyi, tuas dalam, atau kurang pakem',s:'Rem berbunyi atau terasa tidak normal',q:['remtype'],tip:'Bunyi cit tipis tidak selalu berarti rem rusak, tetapi bunyi logam kasar selalu perlu pemeriksaan segera.'},
+  {id:'getar',label:'Getar atau tarikan kasar',hint:'Terutama saat mulai jalan',s:'Getar atau tarikan kasar saat mulai jalan',q:['getartype'],tip:'Pada motor matik, getar saat mulai jalan sering kali berasal dari area CVT.'},
+  {id:'lampu',label:'Lampu redup, aki cepat habis',hint:'Lampu meredup atau aki sering tekor',s:'Lampu redup dan aki cepat habis',q:['akibaru','starter'],tip:'Lampu yang redup saat idle lalu terang saat gas ditarik bisa jadi tanda pengisian aki kurang baik.'}
+];
+var SYM={};SYMS.forEach(function(s){SYM[s.id]=s;});
+
+var REASON={
+ 'when:dingin':'masalahnya paling terasa saat mesin dingin',
+ 'when:always':'masalahnya muncul dingin maupun panas',
+ 'when:panas':'masalahnya baru muncul setelah mesin panas',
+ 'starter:lemah':'starter berbunyi lemah, tanda tenaga listrik tidak cukup',
+ 'starter:putar':'mesin berputar normal tapi tidak menyala, jadi listriknya kemungkinan cukup',
+ 'starter:diam':'starter tidak berbunyi sama sekali',
+ 'lamp:ya':'lampu terlihat redup',
+ 'load:gas':'brebet terasa saat gas ditarik mendadak',
+ 'load:beban':'brebet terasa di tanjakan atau saat membawa beban',
+ 'load:semua':'brebet terasa hampir setiap saat',
+ 'busibaru:belum':'busi belum diganti baru-baru ini',
+ 'busibaru:lupa':'kamu tidak ingat kapan busi terakhir diganti',
+ 'busibaru:sudah':'busi sudah baru, jadi penyebab lain perlu dilihat',
+ 'remtype:cit':'rem berbunyi cit tipis',
+ 'remtype:logam':'terdengar bunyi logam bergesek',
+ 'remtype:dalam':'tuas rem terasa lebih dalam atau empuk',
+ 'getartype:getar':'motor bergetar saat mulai jalan',
+ 'getartype:raung':'mesin meraung tetapi laju tidak ikut',
+ 'getartype:decit':'terdengar bunyi berdecit atau menggerus',
+ 'akibaru:ya':'aki baru diganti tapi cepat habis lagi',
+ 'akibaru:belum':'aki belum pernah diganti',
+ 'akibaru:awet':'aki sebelumnya awet dipakai'
+};
+
+var BUSI_CHECK='Busi bisa dilihat dan diganti sendiri di sebagian motor. Buka tutorial dulu, dan serahkan ke bengkel kalau bodi harus dibongkar.';
+var CAUSES={
+ susah_hidup:[
+  {id:'aki',name:'Aki lemah atau pengisian aki bermasalah',level:'segera',boost:{'starter:lemah':4,'starter:diam':2,'when:dingin':1},
+   diff:'Kalau lampu dan klakson ikut lemah saat starter ditekan, aki jauh lebih mungkin jadi penyebab.',
+   check:'Lihat apakah terminal aki berkarat atau longgar. Karat membuat arus listrik tidak sampai ke starter.',
+   hand:'Mengukur tegangan aki dan sistem pengisian.',ask:'Tegangan aki dan pengisiannya sudah diukur? Hasilnya bagaimana?',part:'Aki dan sistem pengisian'},
+  {id:'busi',name:'Busi sudah aus',level:'aman',boost:{'starter:putar':4,'when:dingin':2,'when:always':1},
+   diff:'Mesin berputar mantap saat distarter, tapi tidak menyala atau baru menyala setelah beberapa kali coba.',
+   check:BUSI_CHECK,ask:'Kondisi busi saya bagaimana? Boleh saya lihat?',part:'Busi'},
+  {id:'bensin',name:'Pasokan bensin kurang lancar',level:'segera',safety:true,boost:{'starter:putar':2,'starter:diam':1},
+   diff:'Pada motor injeksi, biasanya terdengar dengung halus dari area tangki saat kunci diputar ke ON. Kalau tidak ada dengung, sampaikan ke mekanik.',
+   hand:'Sistem bensin tidak boleh dibongkar sendiri.',ask:'Pasokan bensin dan pompanya sudah diperiksa?',part:'Pasokan bensin'},
+  {id:'kelistrikan',name:'Gangguan kelistrikan utama (sekring, kabel, saklar)',level:'segera',safety:true,boost:{'starter:diam':4},
+   diff:'Tidak ada reaksi apa pun saat starter ditekan, walaupun lampu masih menyala normal.',
+   hand:'Kelistrikan utama jangan diotak-atik sendiri.',ask:'Jalur kelistrikan ke starter sudah diperiksa, termasuk sekring dan sambungan kabel?',part:'Kelistrikan starter'}
+ ],
+ brebet:[
+  {id:'busi',name:'Busi aus atau kotor',level:'aman',boost:{'busibaru:belum':3,'busibaru:lupa':2,'load:gas':2,'load:semua':1},
+   diff:'Brebet terasa jelas saat gas ditarik, dan motor seperti kehilangan tenaga sesaat.',
+   check:BUSI_CHECK,ask:'Kondisi busi saya bagaimana? Boleh saya lihat?',part:'Busi'},
+  {id:'filter',name:'Filter udara kotor atau tersumbat',level:'aman',boost:{'load:beban':3,'load:semua':1,'busibaru:sudah':2},
+   diff:'Tarikan terasa berat dan mesin seperti kekurangan napas, terutama saat butuh tenaga lebih, misalnya di tanjakan.',
+   check:'Di sebagian motor filter mudah dilihat. Cara membersihkannya berbeda untuk tiap jenis filter, jadi ikuti buku manual dan tutorialnya.',
+   ask:'Filter udara saya perlu dibersihkan atau diganti? Boleh saya lihat kondisinya?',part:'Filter udara'},
+  {id:'bbm',name:'Aliran bensin atau injektor kurang baik',level:'segera',safety:true,boost:{'busibaru:sudah':3,'load:semua':2,'load:gas':1},
+   diff:'Kalau busi sudah baru tetapi brebet tetap muncul, penyebabnya perlu dicari lebih dalam di sistem bensin.',
+   hand:'Sistem bensin dan injektor hanya boleh ditangani bengkel.',ask:'Aliran bensin dan injektornya sudah diperiksa? Apa buktinya?',part:'Sistem bensin dan injektor'}
+ ],
+ mati_idle:[
+  {id:'idle',name:'Putaran idle tidak stabil',level:'segera',safety:true,boost:{'when:dingin':2,'when:panas':1,'when:always':1},
+   diff:'Mesin normal saat berjalan, tetapi putarannya turun lalu mati begitu gas dilepas dan motor berhenti.',
+   hand:'Setelan idle dan saluran udara ke mesin termasuk bagian mesin, jadi serahkan ke bengkel.',ask:'Putaran idle dan saluran udaranya sudah diperiksa atau dibersihkan?',part:'Putaran idle dan saluran udara'},
+  {id:'charging',name:'Pengisian aki kurang baik',level:'segera',safety:true,boost:{'lamp:ya':4},
+   diff:'Lampu meredup saat idle, lalu terang lagi saat gas ditarik.',
+   hand:'Mengukur pengisian aki saat mesin hidup.',ask:'Pengisian aki saat mesin hidup sudah diukur?',part:'Sistem pengisian aki'},
+  {id:'busi',name:'Busi aus atau kotor',level:'aman',boost:{'when:dingin':1,'when:always':2},
+   diff:'Mesin terasa tidak halus saat idle sebelum akhirnya mati.',
+   check:BUSI_CHECK,ask:'Kondisi busi saya bagaimana? Boleh saya lihat?',part:'Busi'}
+ ],
+ rem:[
+  {id:'kampas',name:'Kampas rem tipis atau kotor',level:'segera',safety:true,boost:{'remtype:cit':4,'remtype:logam':4,'remtype:dalam':1},urg:{'remtype:logam':'jangan'},
+   diff:'Bunyi muncul setiap kali rem ditarik dan hilang saat rem dilepas.',
+   hand:'Rem tidak boleh dibongkar atau disetel sendiri. Kamu boleh melihat ketebalan kampas kalau mudah terlihat, lalu tetap ke bengkel.',
+   ask:'Sisa ketebalan kampas saya berapa dibandingkan batas amannya?',part:'Kampas rem'},
+  {id:'hidrolik',name:'Minyak rem atau sistem hidrolik bermasalah',level:'segera',safety:true,boost:{'remtype:dalam':5},urg:{'remtype:dalam':'jangan'},
+   diff:'Tuas terasa dalam atau empuk meskipun kampasnya masih baik.',
+   hand:'Sistem hidrolik rem hanya boleh ditangani bengkel.',ask:'Minyak rem dan jalur hidroliknya sudah diperiksa? Ada kebocoran?',part:'Minyak rem dan hidrolik'},
+  {id:'cakram',name:'Cakram atau tromol aus',level:'segera',safety:true,boost:{'remtype:logam':2,'remtype:cit':1},urg:{'remtype:logam':'jangan'},
+   diff:'Bunyi tidak hilang walau kampas baru sudah terpasang.',
+   hand:'Pemeriksaan cakram atau tromol dilakukan di bengkel.',ask:'Cakram atau tromolnya masih layak dipakai? Boleh saya lihat?',part:'Cakram atau tromol'}
+ ],
+ getar:[
+  {id:'cvt',only:'matik',name:'Sabuk atau roller CVT aus',level:'segera',safety:true,boost:{'getartype:getar':3,'getartype:raung':4,'getartype:decit':3},
+   diff:'Getar atau raungan muncul tepat saat gas mulai ditarik dari posisi diam.',
+   hand:'CVT ada di dalam penutup yang berhubungan dengan mesin, jadi perlu dibongkar di bengkel.',ask:'Kondisi V-belt dan roller saya bagaimana? Boleh saya lihat?',part:'CVT (V-belt dan roller)'},
+  {id:'rantai',only:'manual',name:'Rantai dan gir aus atau kendor',level:'segera',boost:{'getartype:getar':2,'getartype:decit':3},
+   diff:'Bunyi berasal dari sisi rantai dekat roda belakang, dan terdengar saat gas dibuka lalu ditutup.',
+   check:'Kamu boleh melihat apakah rantai kering, berkarat, atau terlalu kendor. Menyetel dan mengganti sebaiknya di bengkel kalau belum terbiasa.',
+   ask:'Rantai dan gir diganti sepasang atau salah satu saja? Alasannya apa?',part:'Rantai dan gir'},
+  {id:'kopling',only:'manual',name:'Kopling aus atau slip',level:'segera',safety:true,boost:{'getartype:raung':4,'getartype:getar':1},
+   diff:'Putaran mesin naik, tetapi motor tidak ikut melaju.',
+   hand:'Kopling ada di dalam mesin dan perlu dibongkar di bengkel.',ask:'Kondisi kopling saya bagaimana? Apa buktinya?',part:'Kopling'},
+  {id:'lain',name:'Bearing roda atau komponen penggerak lain',level:'segera',safety:true,boost:{'getartype:decit':1,'getartype:getar':1},
+   diff:'Bunyi atau getar ikut berubah mengikuti putaran roda, bukan putaran mesin.',
+   hand:'Pemeriksaan roda dan penggerak dilakukan di bengkel.',ask:'Bearing roda dan komponen penggerak lain sudah diperiksa?',part:'Bearing roda dan penggerak'}
+ ],
+ lampu:[
+  {id:'charging',name:'Pengisian aki bermasalah (generator atau pengatur tegangan)',level:'segera',safety:true,boost:{'akibaru:ya':5,'starter:lemah':1},
+   diff:'Aki yang baru diisi penuh pun tetap cepat habis, dan lampu redup saat idle.',
+   hand:'Mengukur tegangan pengisian saat mesin hidup.',ask:'Pengisian aki saat mesin hidup sudah diukur?',part:'Generator dan pengatur tegangan'},
+  {id:'aki',name:'Aki sudah lemah atau tua',level:'segera',boost:{'akibaru:belum':3,'starter:lemah':3},
+   diff:'Starter terasa lemah, terutama saat mesin dingin atau motor lama tidak dipakai.',
+   check:'Lihat apakah terminal aki berkarat atau longgar. Karat membuat arus listrik tidak sampai ke starter.',
+   hand:'Mengukur kondisi aki.',ask:'Kondisi aki saya diukur dengan alat? Hasilnya bagaimana?',part:'Aki'},
+  {id:'kabel',name:'Terminal atau sambungan kabel kendor atau berkarat',level:'aman',boost:{'akibaru:awet':3,'starter:putar':1,'starter:diam':2},
+   diff:'Gejalanya datang dan pergi: kadang normal, kadang redup.',
+   check:'Boleh melihat terminal aki dari luar: adakah serbuk putih atau hijau (karat), atau tampak longgar. Jangan melepas kabel aki sendiri kalau belum terbiasa.',
+   ask:'Terminal dan sambungan kabelnya sudah diperiksa?',part:'Terminal dan sambungan kabel'}
+ ]
+};
+var LV={aman:0,segera:1,jangan:2};
+var URG={
+ aman:{t:'Aman ditunda',needle:30,lines:['Masih aman dipakai. Catat dulu, lalu sampaikan ke mekanik saat servis berikutnya.','Tidak mendesak, tapi jangan dilupakan. Masalah kecil lebih mudah diselesaikan sebelum membesar.']},
+ segera:{t:'Perlu segera diperiksa',needle:90,lines:['Motor mungkin masih bisa dipakai, tapi sebaiknya diperiksa dalam waktu dekat. Gejala seperti ini jarang membaik sendiri.','Jangan ditunda terlalu lama. Kalau dibiarkan, motor bisa mati mendadak atau merusak komponen lain.']},
+ jangan:{t:'Jangan dikendarai dulu',needle:150,lines:['Berhenti dulu. Ini menyangkut keselamatan, jadi bawa motor ke bengkel tanpa dikendarai lebih jauh kalau bisa.','Untuk keselamatanmu, jangan dipakai dulu. Minta bantuan teknisi atau layanan derek.']}
+};
+var INTRO=['Dari ceritamu, ada beberapa hal yang layak dicek.','Gejala yang kamu sebut cukup khas. Ini dugaan awalnya.','Biar tidak bingung di bengkel, ini ringkasannya.'];
+var GENERIC_ASK=['Boleh saya lihat komponen yang bermasalah sebelum diganti?','Apa yang kamu temukan saat pemeriksaan, dan apa buktinya?','Kalau komponen pertama diganti dan belum membantu, langkah berikutnya apa?'];
+
+function analyze(state){
+  var list=CAUSES[state.symptom].filter(function(c){return !c.only||c.only===state.motor;}).map(function(c,i){
+    var score=1,hits=[],level=c.level;
+    Object.keys(c.boost).forEach(function(k){var p=k.split(':');if(state.answers[p[0]]===p[1]){score+=c.boost[k];hits.push(k);}});
+    Object.keys(c.urg||{}).forEach(function(k){var p=k.split(':');if(state.answers[p[0]]===p[1]&&LV[c.urg[k]]>LV[level])level=c.urg[k];});
+    var o={};for(var key in c)o[key]=c[key];o.score=score;o.hits=hits;o.level=level;o.i=i;return o;
+  }).sort(function(a,b){return b.score-a.score||a.i-b.i;}).slice(0,3);
+  var lvl='aman';
+  list.forEach(function(c,i){if((i===0||c.score>=3)&&LV[c.level]>LV[lvl])lvl=c.level;});
+  return {causes:list,level:lvl};
+}
+function joinId(a){if(a.length<2)return a.join('');return a.slice(0,-1).join(', ')+' dan '+a[a.length-1];}
+
+/* ---------- gauge ---------- */
+function polar(cx,cy,r,deg){var a=deg*Math.PI/180;return [cx+r*Math.cos(a),cy+r*Math.sin(a)];}
+function arc(a1,a2){var p1=polar(120,120,92,a1),p2=polar(120,120,92,a2);return 'M'+p1[0].toFixed(2)+' '+p1[1].toFixed(2)+' A92 92 0 0 1 '+p2[0].toFixed(2)+' '+p2[1].toFixed(2);}
+function gaugeSVG(level){
+  var z=[['aman',182,238,'var(--good)'],['segera',242,298,'var(--warn)'],['jangan',302,358,'var(--bad)']];
+  var paths=z.map(function(a){return '<path class="zone" d="'+arc(a[1],a[2])+'" fill="none" stroke="'+a[3]+'" stroke-width="18" stroke-linecap="round" opacity="'+(a[0]===level?1:.28)+'"/>';}).join('');
+  var ticks='';for(var d=190;d<=350;d+=20){var p1=polar(120,120,70,d),p2=polar(120,120,76,d);ticks+='<line x1="'+p1[0].toFixed(1)+'" y1="'+p1[1].toFixed(1)+'" x2="'+p2[0].toFixed(1)+'" y2="'+p2[1].toFixed(1)+'" stroke="var(--line)" stroke-width="2"/>';}
+  return '<svg class="gauge" viewBox="0 0 240 136" role="img" aria-label="Tingkat urgensi: '+URG[level].t+'">'+paths+ticks+
+    '<g class="needle" style="transform:rotate(0deg)"><line x1="120" y1="120" x2="50" y2="120" stroke="var(--fg)" stroke-width="4" stroke-linecap="round"/></g>'+
+    '<circle cx="120" cy="120" r="9" fill="var(--fg)"/><circle cx="120" cy="120" r="3.5" fill="var(--bg)"/></svg>'+
+    '<div class="glabels"><span class="'+(level==='aman'?'on':'')+'">Aman<br>ditunda</span><span class="'+(level==='segera'?'on':'')+'">Segera<br>diperiksa</span><span class="'+(level==='jangan'?'on':'')+'">Jangan<br>dikendarai</span></div>';
+}
+
+/* ---------- chat flow ---------- */
+var chat=$('#chat');
+var interacted=false,queue=[],run=0,state;
+function nudge(node){if(!interacted)return;node.scrollIntoView({block:'nearest',behavior:reduce?'auto':'smooth'});}
+function bot(html){var r=el('div','row bot','<span class="av" aria-hidden="true">KB</span><div class="bub">'+html+'</div>');chat.appendChild(r);nudge(r);return r;}
+function me(text){var r=el('div','row me','<div class="bub">'+esc(text)+'</div>');chat.appendChild(r);return r;}
+function choices(opts,cfg){
+  cfg=cfg||{};
+  return new Promise(function(res){
+    var box=el('div','choices'+(cfg.grid?' grid':''));
+    opts.forEach(function(o){
+      var b=el('button','chip','<span class="c-l">'+esc(o.label)+'</span>'+(o.sub?'<span class="c-s">'+esc(o.sub)+'</span>':''));
+      b.type='button';b.dataset.id=o.id;
+      b.addEventListener('click',function(){interacted=true;box.remove();me(o.label);res(o);});
+      box.appendChild(b);
+    });
+    if(cfg.extra)box.appendChild(cfg.extra(box));
+    chat.appendChild(box);nudge(box);
+    var q=queue[0];
+    if(q){var t=null;[].forEach.call(box.children,function(c){if(c.dataset&&c.dataset.id===q)t=c;});
+      if(t){queue.shift();setTimeout(function(){interacted=true;t.click();},reduce?0:600);}}
+  });
+}
+function sample(box){
+  var b=el('button','chip ghost','Coba contoh keluhan');b.type='button';
+  b.addEventListener('click',function(){queue=['matik','susah_hidup','dingin','lemah'];var f=queue.shift();interacted=true;box.querySelector('[data-id="'+f+'"]').click();});
+  return b;
+}
+function startFlow(){
+  run++;var my=run;queue=[];interacted=false;chat.innerHTML='';
+  state={motor:null,symptom:null,answers:{}};
+  bot('Halo, aku <b>Kak Bengkel</b>. Ceritakan keluhan motormu, nanti aku bantu susun jadi ringkasan yang gampang dibaca mekanik.');
+  bot('Motormu jenis apa?');
+  choices(MOTORS,{extra:sample}).then(function(m){
+    if(my!==run)return;state.motor=m.id;
+    bot('Keluhan apa yang paling mengganggu?');
+    return choices(SYMS.map(function(s){return {id:s.id,label:s.label,sub:s.hint};}),{grid:true});
+  }).then(function(s){
+    if(my!==run||!s)return;state.symptom=s.id;
+    var S=SYM[s.id];
+    if(state.motor==='listrik'){
+      bot('Untuk motor listrik aku tidak menebak penyebab, karena sistemnya bertegangan tinggi dan hanya aman ditangani teknisi yang berpengalaman. Aku tetap bantu menyusun pesan untuk mekanik.');
+      return null;
+    }
+    bot('Oke, <b>'+esc(S.label.toLowerCase())+'</b>. Aku tanya '+(S.q.length>1?'dua':'satu')+' hal singkat ya.');
+    var p=Promise.resolve();
+    S.q.forEach(function(qid){
+      p=p.then(function(){
+        if(my!==run)return;
+        bot(Q[qid].t);
+        return choices(Q[qid].o.map(function(o){return {id:o[0],label:o[1]};})).then(function(a){if(my!==run)return;state.answers[qid]=a.id;});
+      });
+    });
+    return p;
+  }).then(function(){
+    if(my!==run||!state.symptom)return;
+    bot(pick(INTRO));showResult();
+  });
+}
+
+function showResult(){
+  var S=SYM[state.symptom],M=MOTORS.filter(function(m){return m.id===state.motor;})[0];
+  var locked=state.motor==='listrik',res,level,causes=[];
+  if(locked){level='segera';}else{res=analyze(state);level=res.level;causes=res.causes;}
+  var U=URG[level];
+  var answerS=S.q.map(function(qid){var a=state.answers[qid];return Q[qid]&&Q[qid].o.filter(function(o){return o[0]===a;})[0][2];});
+  var root=el('div','result');
+
+  /* summary + gauge */
+  var sumTxt=locked?'Motor listrikmu mengalami: <b>'+esc(S.s.toLowerCase())+'</b>.':'Motor <b>'+esc(M.id==='matik'?'matik':'bebek atau sport')+'</b> kamu mengalami <b>'+esc(S.s.toLowerCase())+'</b>.'+(answerS.length?' '+answerS.map(function(t){return esc(t)+'.';}).join(' '):'');
+  var g=el('div','panel gauge-card');
+  g.innerHTML='<div>'+gaugeSVG(level)+'</div><div><p class="mono" style="color:var(--muted)">Tingkat urgensi</p><h2 class="urg-title '+level+'">'+U.t+'</h2><p>'+esc(pick(U.lines))+'</p><p class="summary" style="margin-top:12px">'+sumTxt+'</p></div>';
+  root.appendChild(g);
+  var needle=g.querySelector('.needle');
+  requestAnimationFrame(function(){requestAnimationFrame(function(){needle.style.transform='rotate('+U.needle+'deg)';});});
+
+  /* causes */
+  if(locked){
+    root.appendChild(el('div','lock-card','<b>Serahkan ke teknisi motor listrik</b><p>Baterai dan sistem penggeraknya bertegangan tinggi. Jangan membuka atau menyentuh komponennya sendiri. Bawa ke bengkel resmi atau teknisi yang berpengalaman dengan motor listrik.</p>'));
+  }else{
+    var box=el('div','panel');box.appendChild(el('h2','sec-h','Dugaan penyebab'));
+    var rank=['Paling mungkin','Mungkin','Kemungkinan kecil'];
+    causes.forEach(function(c,i){
+      var why=c.hits.length?'Karena '+joinId(c.hits.map(function(k){return REASON[k];}))+'.':'Ini penyebab yang cukup umum untuk keluhan seperti ini, walau jawabanmu belum menunjuk ke arah tertentu.';
+      var d=el('details','cause');if(i===0)d.open=true;
+      var pips='';for(var n=0;n<3;n++)pips+='<i class="'+(n<3-i?'on':'')+'"></i>';
+      var body='<div><h4>Kenapa dugaan ini muncul</h4><p>'+esc(why)+'</p></div><div><h4>Cara membedakan</h4><p>'+esc(c.diff)+'</p></div>';
+      if(c.check)body+='<div><h4 class="ok">Yang bisa kamu cek</h4><p>'+esc(c.check)+'</p></div>';
+      if(c.hand)body+='<div><h4 class="no">Serahkan ke bengkel</h4><p>'+esc(c.hand)+'</p></div>';
+      d.innerHTML='<summary><span class="c-name">'+esc(c.name)+'</span><span class="c-meta"><span class="pips" aria-hidden="true">'+pips+'</span><span class="mono" style="color:var(--muted)">'+rank[i]+'</span>'+(c.safety?'<span class="badge lock">Hanya bengkel</span>':'')+'</span></summary><div class="cbody">'+body+'</div>';
+      box.appendChild(d);
+    });
+    root.appendChild(box);
+    root.appendChild(el('div','tip','<b>Tahukah kamu</b><p>'+esc(S.tip)+'</p>'));
+  }
+
+  /* mechanic questions */
+  var asks=locked?['Apakah bengkel ini berpengalaman menangani motor listrik?','Apa hasil pembacaan data dari sistem baterai dan pengendali motor?'].concat(GENERIC_ASK.slice(0,1)):causes.slice(0,2).map(function(c){return c.ask;}).concat(GENERIC_ASK);
+  var qp=el('div','panel');qp.appendChild(el('h2','sec-h','Tanyakan ini ke mekanik'));
+  var cl=el('div','checks');
+  asks.forEach(function(a,i){var id='ask'+i;cl.appendChild(el('label','check','<input type="checkbox" id="'+id+'"><span class="ck-t">'+esc(a)+'</span>'));});
+  qp.appendChild(cl);root.appendChild(qp);
+
+  /* WhatsApp */
+  var parts=locked?['Baterai dan sistem penggerak motor listrik']:causes.map(function(c){return c.part;});
+  var msg='Halo, saya ingin servis motor '+M.s+'.\n\nKeluhan:\n- '+S.s+'.\n'+answerS.map(function(t){return '- '+t+'.\n';}).join('')+
+    '\nMohon periksa:\n'+parts.map(function(p){return '- '+p+'.\n';}).join('')+
+    '\nSebelum perbaikan, mohon informasikan:\n- Penyebab kerusakan.\n- Komponen yang perlu diganti dan alasannya.\n- Estimasi biaya jasa dan sparepart secara tertulis.\n- Waktu pengerjaan.\n\nMohon konfirmasi terlebih dahulu sebelum penggantian komponen.\n\nTerima kasih.';
+  var wp=el('div','panel');wp.appendChild(el('h2','sec-h','Pesan untuk mekanik'));
+  var pre=el('div','wa');pre.textContent=msg;wp.appendChild(pre);
+  var br=el('div','btn-row');
+  var cb=el('button','btn pri','Salin pesan');cb.type='button';cb.addEventListener('click',function(){copyText(msg,pre,cb);});
+  var rb=el('button','btn','Cek keluhan lain');rb.type='button';rb.addEventListener('click',function(){startFlow();window.scrollTo({top:0,behavior:reduce?'auto':'smooth'});});
+  br.appendChild(cb);br.appendChild(rb);wp.appendChild(br);root.appendChild(wp);
+  root.appendChild(el('p','disc','Ini kemungkinan awal, bukan diagnosis pasti. Teknisi yang memeriksa motormu langsung yang menentukan penyebab sebenarnya.'));
+  chat.appendChild(root);
+  if(interacted)setTimeout(function(){g.scrollIntoView({block:'start',behavior:reduce?'auto':'smooth'});},120);
+}
+
+/* ---------- kamus ---------- */
+var KAMUS=[
+ {id:'busi',term:'Busi',cat:'Mesin',short:'Komponen kecil yang memercikkan api di dalam mesin supaya bensin bisa terbakar.',
+  analogy:'Busi itu seperti korek api untuk mesin. Tanpa percikan yang kuat, campuran bensin dan udara tidak menyala dengan baik.',
+  how:'Setiap kali mesin berputar, busi memercikkan api ratusan sampai ribuan kali per menit. Seiring waktu ujungnya aus dan celah percikannya melebar, sehingga percikan jadi lemah atau tidak teratur.',
+  signs:['Susah hidup, terutama pagi atau saat mesin dingin','Mesin brebet (tersendat) saat digas','Tarikan terasa berat dan bensin terasa lebih boros'],
+  ignored:'Pembakaran tidak sempurna. Tenaga turun, mesin lebih cepat kotor, dan motor makin sering sulit dihidupkan.',
+  diy:'hati',diyWhy:'Di sebagian motor busi mudah dijangkau, di sebagian lain tertutup bodi. Ikuti buku manual, dan serahkan ke bengkel kalau bodi harus dibongkar.',
+  ask:['Kondisi busi saya seperti apa? Boleh saya lihat?','Kalau busi diganti, keluhan saya diharapkan berubah seperti apa?','Kalau busi baru pun belum membantu, kemungkinan penyebab lainnya apa?'],related:['filter','aki']},
+ {id:'aki',term:'Aki dan sistem pengisian',cat:'Kelistrikan',short:'Aki menyimpan listrik untuk starter dan lampu. Sistem pengisian mengisinya lagi saat mesin hidup.',
+  analogy:'Aki itu dompet, sistem pengisian itu pemasukan. Dompet kosong bisa karena terlalu banyak dipakai, tapi bisa juga karena pemasukannya berhenti. Ganti dompet saja tidak menyelesaikan masalah kalau pemasukannya yang bermasalah.',
+  how:'Saat mesin hidup, generator kecil di mesin menghasilkan listrik, dan komponen pengatur menjaga tegangannya supaya aman. Sebagian listrik dipakai lampu, sebagian mengisi aki.',
+  signs:['Starter berbunyi lemah atau ngik-ngik, mesin tidak berputar','Lampu dan klakson meredup, terutama saat idle','Aki baru diganti tapi cepat habis lagi, petunjuk bahwa masalahnya bukan di aki saja'],
+  ignored:'Motor bisa mati mendadak di jalan, dan sistem kelistrikan lain ikut terganggu.',
+  diy:'hati',diyWhy:'Kamu boleh melihat apakah terminal aki berkarat atau longgar. Mengukur dan memperbaiki sistem pengisian adalah bagian kelistrikan utama, jadi serahkan ke bengkel.',
+  ask:['Tegangan aki dan pengisian saat mesin hidup sudah diukur? Hasilnya berapa?','Akinya yang lemah, atau pengisiannya yang bermasalah?'],related:['busi']},
+ {id:'cvt',term:'CVT (motor matik)',cat:'Penggerak',short:'Sistem transmisi motor matik yang menyalurkan tenaga mesin ke roda secara otomatis, tanpa gigi bertingkat.',
+  analogy:'Seperti sepeda yang bisa mengubah gigi secara halus tanpa kamu memindahkan apa pun. Sabuknya berputar di antara dua puli yang bisa melebar dan menyempit.',
+  how:'Saat gas ditarik, roller (bola pemberat kecil) bergeser dan mengubah lebar puli. Sabuk (V-belt) ikut berpindah posisi sehingga perbandingan tenaganya berubah.',
+  signs:['Motor bergetar saat mulai jalan','Mesin meraung tetapi laju tidak ikut naik','Bunyi berdecit atau menggerus dari area samping mesin','Tenaga lemah di tanjakan'],
+  ignored:'Sabuk dan roller yang aus bisa merusak komponen CVT lain.',
+  diy:'bengkel',diyWhy:'Ruang CVT berhubungan langsung dengan mesin dan perlu pembongkaran.',
+  ask:['Kondisi V-belt dan roller saya bagaimana? Boleh saya lihat?','Ada komponen CVT lain yang sudah aus, atau cukup diganti sebagian?'],related:['oli']},
+ {id:'rem',term:'Kampas rem',cat:'Rem',short:'Lapisan yang bergesekan dengan cakram atau tromol untuk memperlambat dan menghentikan motor.',
+  analogy:'Seperti karet penghapus yang menggosok permukaan. Makin sering dipakai, makin tipis.',
+  how:'Saat tuas atau pedal ditekan, kampas dijepitkan ke cakram atau tromol. Gesekan itu mengubah gerak roda menjadi panas, dan motor melambat. Kampas pelan-pelan terkikis.',
+  signs:['Rem berbunyi cit saat ditarik','Tuas atau pedal terasa lebih dalam sebelum motor melambat','Bunyi logam bergesek: kampas sudah habis, jangan dikendarai dulu'],
+  ignored:'Jarak berhenti makin panjang dan cakram bisa rusak. Ini menyangkut keselamatanmu.',
+  diy:'bengkel',diyWhy:'Kamu boleh melihat ketebalan kampas dan ada tidaknya kebocoran minyak rem di sekitar. Membongkar, mengganti, atau menyetel rem harus dilakukan di bengkel.',
+  ask:['Sisa ketebalan kampas saya berapa dibandingkan batas amannya?','Selain kampas, cakram atau minyak rem juga perlu diperiksa?'],related:[]},
+ {id:'filter',term:'Filter udara',cat:'Mesin',short:'Saringan yang menahan debu sebelum udara masuk ke mesin.',
+  analogy:'Seperti masker untuk mesin. Kalau masker kotor dan tersumbat, mesin jadi sulit bernapas.',
+  how:'Mesin butuh campuran udara dan bensin. Filter yang tersumbat membuat udara yang masuk kurang, sehingga pembakaran tidak sempurna dan mesin bekerja lebih berat.',
+  signs:['Tarikan terasa berat, terutama di tanjakan','Brebet saat butuh tenaga lebih','Bensin terasa lebih boros'],
+  ignored:'Mesin bekerja lebih berat dan lebih cepat kotor, dan tenaga makin turun.',
+  diy:'hati',diyWhy:'Di sebagian motor filter mudah dibuka, tetapi jenisnya berbeda (kertas, busa) dan salah membersihkan bisa merusaknya. Ikuti buku manual.',
+  ask:['Filter udara saya perlu dibersihkan atau diganti? Boleh saya lihat kondisinya?'],related:['busi','oli']},
+ {id:'oli',term:'Oli mesin',cat:'Mesin',short:'Cairan pelumas yang mengurangi gesekan antar komponen di dalam mesin.',
+  analogy:'Seperti pelumas pada engsel pintu. Tanpa itu, logam bergesekan, panas, dan cepat aus.',
+  how:'Oli melumasi bagian mesin yang bergerak, membantu membuang panas, dan membawa kotoran halus supaya tidak menempel. Lama-lama oli kehilangan kemampuannya dan perlu diganti.',
+  signs:['Suara mesin terasa lebih kasar atau berisik','Lampu indikator oli menyala (kalau motormu punya)','Ada bercak oli di bawah mesin'],
+  ignored:'Gesekan meningkat, mesin makin panas dan aus. Kerusakan mesin yang parah bisa terjadi.',
+  diy:'boleh',diyWhy:'Mengecek level oli lewat jendela atau batang celup boleh kamu lakukan. Mengganti oli perlu jenis oli yang sesuai buku manual dan pembuangan oli bekas yang benar.',
+  ask:['Jenis dan spesifikasi oli yang dipakai sesuai buku manual saya?','Ada tanda kebocoran oli di mesin saya?'],related:['filter']}
+];
+var DIYM={boleh:0,hati:1,bengkel:2};
+var kcat='Semua',kq='';
+var termsEl=$('#terms'),termNodes={};
+KAMUS.forEach(function(k){
+  var d=el('details','term');d.id='term-'+k.id;
+  var rel=k.related.map(function(r){var t=KAMUS.filter(function(x){return x.id===r;})[0];return t?'<button type="button" data-rel="'+t.id+'">'+esc(t.term)+'</button>':'';}).join('');
+  var m=DIYM[k.diy];
+  d.innerHTML='<summary><span class="t-cat">'+esc(k.cat)+'</span><span class="t-name" style="grid-column:1">'+esc(k.term)+'</span><span class="t-short">'+esc(k.short)+'</span></summary>'+
+   '<div class="tbody">'+
+   '<div class="analogy"><h4>Bayangkan begini</h4><p>'+esc(k.analogy)+'</p></div>'+
+   '<div><h4>Apa yang terjadi di motormu</h4><p>'+esc(k.how)+'</p></div>'+
+   '<div><h4>Tanda-tanda bermasalah</h4><ul>'+k.signs.map(function(s){return '<li>'+esc(s)+'</li>';}).join('')+'</ul></div>'+
+   '<div><h4>Kalau dibiarkan</h4><p>'+esc(k.ignored)+'</p></div>'+
+   '<div><h4>Boleh dicek sendiri?</h4><div class="meter" role="img" aria-label="'+['Boleh','Hati-hati','Bengkel saja'][m]+'"><span class="g'+(m===0?' on':'')+'">Boleh</span><span class="o'+(m===1?' on':'')+'">Hati-hati</span><span class="r'+(m===2?' on':'')+'">Bengkel saja</span></div><p style="margin-top:8px">'+esc(k.diyWhy)+'</p></div>'+
+   '<div><h4>Tanya ini ke mekanik</h4><ul>'+k.ask.map(function(s){return '<li>'+esc(s)+'</li>';}).join('')+'</ul></div>'+
+   (rel?'<div><h4>Sering dikaitkan dengan</h4><div class="related">'+rel+'</div></div>':'')+
+   '</div>';
+  termsEl.appendChild(d);termNodes[k.id]=d;
+});
+termsEl.addEventListener('click',function(e){
+  var b=e.target.closest&&e.target.closest('[data-rel]');if(!b)return;
+  kq='';$('#kamus-q').value='';kcat='Semua';drawFilters();filterKamus();
+  var t=termNodes[b.getAttribute('data-rel')];t.open=true;t.scrollIntoView({block:'start',behavior:reduce?'auto':'smooth'});
+});
+var cats=['Semua'];KAMUS.forEach(function(k){if(cats.indexOf(k.cat)<0)cats.push(k.cat);});
+function drawFilters(){
+  var f=$('#kamus-filters');f.innerHTML='';
+  cats.forEach(function(c){var b=el('button','fchip',esc(c));b.type='button';b.setAttribute('aria-pressed',c===kcat?'true':'false');b.addEventListener('click',function(){kcat=c;drawFilters();filterKamus();});f.appendChild(b);});
+}
+function filterKamus(){
+  var n=0,q=kq.trim().toLowerCase();
+  KAMUS.forEach(function(k){
+    var hay=(k.term+' '+k.short+' '+k.cat+' '+k.signs.join(' ')+' '+k.analogy).toLowerCase();
+    var ok=(kcat==='Semua'||k.cat===kcat)&&(!q||hay.indexOf(q)>=0);
+    termNodes[k.id].hidden=!ok;if(ok)n++;
+  });
+  $('#kamus-count').textContent=n+' dari '+KAMUS.length+' istilah';
+  $('#kamus-empty').hidden=n>0;
+}
+$('#kamus-q').addEventListener('input',function(e){kq=e.target.value;filterKamus();});
+drawFilters();filterKamus();
+
+/* ---------- tutorial ---------- */
+var STEPS=[
+ ['Parkir di tempat datar, saat ban masih dingin','Ban yang baru dipakai jauh menjadi hangat dan angkanya naik, jadi hasil ukur tidak akurat.'],
+ ['Cari angka tekanan anjuran di stiker pada motor atau buku manual','Tiap motor berbeda, dan ban depan bisa berbeda dari ban belakang. Jangan memakai angka dari ingatan.'],
+ ['Buka tutup pentil, tempelkan pengukur dengan lurus','Kalau miring, udara bocor dan angkanya tidak tepat.'],
+ ['Bandingkan dengan angka anjuran, lalu tambah atau kurangi angin','Terlalu keras atau terlalu lembek sama-sama membuat motor kurang stabil.'],
+ ['Pasang kembali tutup pentil','Tutup melindungi pentil dari debu yang bisa membuat bocor halus.'],
+ ['Lihat sekeliling ban sambil memutarnya pelan','Cari benda tajam, retakan, atau benjolan. Kalau ada, hentikan dan ke bengkel.']
+];
+var tut=$('#tut-steps');
+STEPS.forEach(function(s,i){tut.appendChild(el('label','check','<input type="checkbox" class="tc" id="tc'+i+'"><span><span class="ck-t">'+esc(s[0])+'</span><span class="ck-w">Kenapa: '+esc(s[1])+'</span></span>'));});
+function tutUpdate(){
+  var n=document.querySelectorAll('.tc:checked').length,tot=STEPS.length;
+  $('#ring-n').textContent=n+'/'+tot;
+  $('#ring-c').style.strokeDashoffset=(163.36*(1-n/tot)).toFixed(2);
+  $('#tut-done').textContent=n===tot?'Semua langkah selesai. Kalau angkanya sudah sesuai anjuran, kamu beres.':'';
+}
+tut.addEventListener('change',tutUpdate);tutUpdate();
+
+/* ---------- anti getok ---------- */
+var AG=[
+ ['Sebelum berangkat',[
+  ['Jelaskan gejala sespesifik mungkin','Mekanik yang tahu kapan dan bagaimana gejala muncul bisa langsung mempersempit penyebabnya.'],
+  ['Minta diperiksa dulu sebelum komponen besar dibongkar','Pemeriksaan awal sering sudah menunjukkan masalahnya tanpa membongkar apa pun.']]],
+ ['Saat motor diperiksa',[
+  ['Minta estimasi biaya jasa dan sparepart secara tertulis','Angka tertulis jadi pegangan kalau ada perbedaan saat membayar.'],
+  ['Tanyakan apakah estimasi bisa berubah, dan kenapa','Biaya bisa bertambah kalau ada temuan baru. Pastikan kamu tahu alasannya sebelum setuju.'],
+  ['Minta konfirmasi sebelum komponen diganti, dan jangan setujui kerja tambahan tanpa penjelasan','Keputusan tetap di tanganmu, bukan di tangan bengkel.'],
+  ['Tanyakan alasan komponen harus diganti, minta foto atau video kondisinya','Komponen yang benar-benar rusak mudah ditunjukkan.']]],
+ ['Setelah selesai',[
+  ['Minta komponen lama dikembalikan','Kamu bisa melihat sendiri bahwa komponen itu memang diganti.'],
+  ['Minta nota rinci berisi jasa, sparepart, dan total','Nota rinci memudahkan kamu mencocokkan dengan estimasi di awal.']]]
+];
+var agWrap=$('#ag-groups'),agN=0;
+AG.forEach(function(g){
+  var box=el('div','group');box.appendChild(el('h3','',esc(g[0])));
+  var list=el('div','checks');
+  g[1].forEach(function(it){list.appendChild(el('label','check','<input type="checkbox" class="ac" id="ac'+(agN++)+'"><span><span class="ck-t">'+esc(it[0])+'</span><span class="ck-w">'+esc(it[1])+'</span></span>'));});
+  box.appendChild(list);agWrap.appendChild(box);
+});
+function agUpdate(){
+  var n=document.querySelectorAll('.ac:checked').length,tot=agN;
+  $('#ag-text').textContent='Siap '+n+' dari '+tot;
+  $('#ag-fill').style.width=(100*n/tot)+'%';
+  $('#ag-bar').setAttribute('aria-valuenow',n);
+}
+agWrap.addEventListener('change',agUpdate);agUpdate();
+var PHRASES=['Boleh diperiksa dulu, lalu kabari saya sebelum ada komponen yang diganti?','Boleh saya lihat komponen yang rusak, dan kenapa harus diganti?','Tolong tuliskan estimasi biaya jasa dan sparepart-nya dulu ya.'];
+var ph=$('#phrases');
+PHRASES.forEach(function(t){
+  var r=el('div','phrase','<p>'+esc(t)+'</p>');var b=el('button','btn','Salin');b.type='button';
+  b.addEventListener('click',function(){copyText(t,r.querySelector('p'),b);});
+  r.appendChild(b);ph.appendChild(r);
+});
+
+startFlow();
+})();
+</script>
