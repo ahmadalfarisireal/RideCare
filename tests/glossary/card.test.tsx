@@ -18,11 +18,11 @@ describe("GlossaryCard", () => {
   });
 
   it("tetap menampilkan istilah lama tanpa field baru", () => {
-    const rantai = glossaryTerms.find((term) => term.id === "rantai");
-    expect(rantai).toBeDefined();
-    const html = renderToStaticMarkup(<GlossaryCard term={rantai!} relatedTerms={[]} />);
+    const sistemCharging = glossaryTerms.find((term) => term.id === "sistem-charging");
+    expect(sistemCharging).toBeDefined();
+    const html = renderToStaticMarkup(<GlossaryCard term={sistemCharging!} relatedTerms={[]} />);
 
-    expect(html).toContain("Rantai");
+    expect(html).toContain("Sistem charging");
     expect(html).toContain("Penjelasan");
     expect(html).toContain("Komponen terkait");
     expect(html).not.toContain("Bayangkan begini");

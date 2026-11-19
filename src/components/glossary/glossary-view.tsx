@@ -2,24 +2,13 @@
 
 import { useEffect, useMemo, useState } from "react";
 
-import { glossaryTerms } from "@/data/glossary";
+import { getGlossaryCategories, glossaryTerms } from "@/data/glossary";
 import { filterGlossaryTerms } from "@/lib/glossary/search";
 import { GlossaryCard } from "@/components/glossary/glossary-card";
 import { Input } from "@/components/ui/input";
 import { GLOSSARY_CATEGORY_LABELS, type GlossaryCategory, type GlossaryTerm } from "@/types/glossary";
 
 type CategoryFilter = "semua" | GlossaryCategory;
-
-const CATEGORIES: CategoryFilter[] = [
-  "semua",
-  "mesin",
-  "kelistrikan",
-  "pengereman",
-  "roda_dan_rangka",
-  "bahan_bakar_dan_udara",
-  "transmisi_dan_penggerak",
-  "perawatan",
-];
 
 function categoryLabel(category: CategoryFilter): string {
   if (category === "semua") return "Semua";
@@ -33,6 +22,11 @@ export function GlossaryView() {
 
   const termsById = useMemo(
     () => new Map(glossaryTerms.map((term) => [term.id, term])),
+    [],
+  );
+
+  const categories = useMemo<CategoryFilter[]>(
+    () => ["semua", ...getGlossaryCategories()],
     [],
   );
 
@@ -81,7 +75,7 @@ export function GlossaryView() {
       <div className="space-y-2">
         <p className="text-sm font-medium text-foreground">Kategori</p>
         <div className="flex flex-wrap gap-2" role="group" aria-label="Filter kategori">
-          {CATEGORIES.map((item) => {
+          {categories.map((item) => {
             const selected = category === item;
             return (
               <button
