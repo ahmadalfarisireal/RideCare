@@ -4,27 +4,23 @@ import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 
-import { analyze, type AnalysisInput, type AnalysisResult } from "@/lib/complaint-engine";
+import { analyze, type AnalysisInput } from "@/lib/complaint-engine";
 import { getTutorialBySlug } from "@/data/tutorials";
+import { toResultView } from "@/lib/ui/analysis-view";
 import {
   clearComplaintInput,
   loadComplaintInput,
-  type StoredComplaintInput,
 } from "@/lib/storage/complaint-session";
 import { DisclaimerBanner } from "@/components/layout/disclaimer-banner";
 import { buttonVariants } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { ArrowLeftIcon, ArrowRightIcon } from "@/components/ui/icons";
+import { ArrowLeftIcon, ArrowRightIcon, ShieldIcon } from "@/components/ui/icons";
 import { ChecklistView } from "@/components/result/checklist-view";
 import { SafetyAlert } from "@/components/result/safety-alert";
-import { UrgencyBadge } from "@/components/result/urgency-badge";
-
-const MOTOR_LABEL: Record<StoredComplaintInput["motorcycleType"], string> = {
-  bebek: "Motor bebek",
-  matik: "Motor matik",
-  sport: "Motor sport",
-  listrik: "Motor listrik",
-};
+import { CauseCard } from "@/components/result/cause-card";
+import { MechanicQuestions } from "@/components/result/mechanic-questions";
+import { UrgencyGauge } from "@/components/result/urgency-gauge";
+import { WhatsAppPanel } from "@/components/result/whatsapp-panel";
 
 function LoadingState() {
   return (
@@ -65,17 +61,17 @@ export function ResultView() {
     }
   }, [status, router]);
 
-  const result: AnalysisResult | null = useMemo(() => {
+  const view = useMemo(() => {
     if (!input) return null;
-    return analyze(input);
+    return toResultView(input, analyze(input));
   }, [input]);
 
-  if (status === "loading" || status === "empty" || !input || !result) {
+  if (status === "loading" || status === "empty" || !input || !view) {
     return <LoadingState />;
   }
 
-  const showSafety = result.safetyLocked || result.urgency === "jangan_dikendarai";
-  const hasTutorials = result.recommendedTutorials.length > 0 && !result.safetyLocked;
+  const showSafety = view.safetyLocked || view.urgency === "jangan_dikendarai";
+  const hasTutorials = view.recommendedTutorials.length > 0 && !view.safetyLocked;
 
   return (
     <div className="mx-auto max-w-2xl space-y-6 px-4 py-6 sm:px-6 sm:py-8">
@@ -85,7 +81,7 @@ export function ResultView() {
           className="inline-flex items-center gap-2 text-sm font-medium text-muted hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
         >
           <ArrowLeftIcon className="size-4" />
-          Ubah jawaban
+          Ubah cerita
         </Link>
         <button
           type="button"
@@ -99,51 +95,65 @@ export function ResultView() {
         </button>
       </div>
 
-      {showSafety ? <SafetyAlert urgency={result.urgency} /> : null}
+      {showSafety ? <SafetyAlert urgency={view.urgency} /> : null}
+      <UrgencyGauge urgency={view.urgency} />
 
       <Card>
         <CardHeader>
           <CardTitle>Ringkasan keluhan</CardTitle>
         </CardHeader>
         <CardContent className="space-y-3">
-          <p className="text-sm text-muted">{MOTOR_LABEL[input.motorcycleType]}</p>
-          <p className="text-base leading-relaxed text-foreground">{input.complaint}</p>
-          <div className="pt-1">
-            <UrgencyBadge urgency={result.urgency} />
-          </div>
-        </CardContent>
-      </Card>
-
-      <Card>
-        <CardHeader>
-          <CardTitle>Kemungkinan penyebab</CardTitle>
-        </CardHeader>
-        <CardContent>
-          {result.possibleCauses.length > 0 ? (
-            <ol className="list-decimal space-y-2 pl-5 text-sm leading-relaxed text-foreground">
-              {result.possibleCauses.map((cause, idx) => (
-                <li key={`${cause.ruleId}-${idx}`}>{cause.text}</li>
-              ))}
-            </ol>
-          ) : (
-            <p className="text-sm leading-relaxed text-muted">
-              Belum ada kemungkinan penyebab spesifik yang cocok. Sebaiknya periksa langsung ke
-              bengkel atau teknisi yang kompeten.
-            </p>
-          )}
-          <p className="mt-3 text-xs text-muted">
-            Ini hanya kemungkinan awal, bukan diagnosis pasti.
+          <p className="text-sm leading-relaxed text-foreground">{view.intro}</p>
+          <p className="whitespace-pre-line text-sm leading-relaxed text-muted">
+            {view.summary}
+          </p>
+          <p className="font-mono text-xs uppercase tracking-[0.08em] text-muted">
+            {view.motorLabel}
           </p>
         </CardContent>
       </Card>
 
+      <section className="space-y-3">
+        <div>
+          <h2 className="text-lg font-semibold text-foreground">Kemungkinan penyebab</h2>
+          <p className="text-sm text-muted">
+            Diurutkan dari yang paling cocok dengan ceritamu.
+          </p>
+        </div>
+        {view.causes.length > 0 ? (
+          <div className="space-y-3">
+            {view.causes.map((cause, index) => (
+              <CauseCard key={cause.id} cause={cause} index={index} />
+            ))}
+          </div>
+        ) : (
+          <Card>
+            <CardContent className="p-5">
+              <p className="text-sm leading-relaxed text-muted">
+                Belum ada kemungkinan penyebab spesifik yang cocok. Sebaiknya periksa langsung ke
+                bengkel atau teknisi yang kompeten.
+              </p>
+            </CardContent>
+          </Card>
+        )}
+        <p className="text-xs text-muted">Ini hanya kemungkinan awal, bukan diagnosis pasti.</p>
+      </section>
+
       <Card>
         <CardHeader>
-          <CardTitle>Komponen yang perlu diperiksa</CardTitle>
+          <CardTitle>
+            {view.safetyLocked ? "Bagian yang akan diperiksa bengkel" : "Komponen yang perlu diperiksa"}
+          </CardTitle>
         </CardHeader>
-        <CardContent>
+        <CardContent className="space-y-3">
+          {view.safetyLocked ? (
+            <p className="flex gap-2 text-sm leading-relaxed text-foreground">
+              <ShieldIcon className="mt-0.5 size-4 shrink-0 text-danger" />
+              Serahkan pemeriksaan bagian berikut ke bengkel atau teknisi. Jangan dibongkar sendiri.
+            </p>
+          ) : null}
           <ul className="list-disc space-y-1.5 pl-5 text-sm leading-relaxed text-foreground">
-            {result.componentsToCheck.map((item) => (
+            {view.componentsToCheck.map((item) => (
               <li key={item}>{item}</li>
             ))}
           </ul>
@@ -155,7 +165,7 @@ export function ResultView() {
           <CardTitle>Tutorial perawatan</CardTitle>
         </CardHeader>
         <CardContent className="space-y-2">
-          {result.safetyLocked ? (
+          {view.safetyLocked ? (
             <p className="text-sm leading-relaxed text-foreground">
               Tidak ada saran bongkar sendiri untuk kondisi ini. Segera bawa motor ke bengkel atau
               teknisi yang kompeten.
@@ -166,7 +176,7 @@ export function ResultView() {
                 Tutorial relevan untuk kemungkinan di atas:
               </p>
               <ul className="space-y-2">
-                {result.recommendedTutorials.map((slug) => {
+                {view.recommendedTutorials.map((slug) => {
                   const tutorial = getTutorialBySlug(slug);
                   if (!tutorial) {
                     return (
@@ -194,41 +204,24 @@ export function ResultView() {
         </CardContent>
       </Card>
 
-      <Card>
-        <CardHeader>
-          <CardTitle>Pertanyaan untuk mekanik</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <ul className="list-disc space-y-2 pl-5 text-sm leading-relaxed text-foreground">
-            {result.mechanicQuestions.map((q, i) => (
-              <li key={i}>{q}</li>
-            ))}
-          </ul>
-        </CardContent>
-      </Card>
+      <MechanicQuestions questions={view.mechanicQuestions} />
+
+      <WhatsAppPanel message={view.waMessage} link={view.waLink} />
 
       <section className="space-y-3">
         <h2 className="text-lg font-semibold text-foreground">Checklist anti getok harga</h2>
-        <ChecklistView items={result.checklist} />
+        <ChecklistView items={view.checklist} />
       </section>
 
       <DisclaimerBanner />
 
-      <div className="grid gap-3 sm:grid-cols-2">
-        <Link
-          href="/pesan-mekanik"
-          className={buttonVariants({ variant: "primary", size: "lg", className: "w-full" })}
-        >
-          Buat pesan untuk mekanik
-          <ArrowRightIcon className="size-4" />
-        </Link>
-        <Link
-          href="/checklist"
-          className={buttonVariants({ variant: "secondary", size: "lg", className: "w-full" })}
-        >
-          Lihat checklist
-        </Link>
-      </div>
+      <Link
+        href="/checklist"
+        className={buttonVariants({ variant: "secondary", size: "lg", className: "w-full" })}
+      >
+        Lihat checklist lengkap
+        <ArrowRightIcon className="size-4" />
+      </Link>
 
       {showSafety ? (
         <p className="text-center text-sm font-medium text-danger">

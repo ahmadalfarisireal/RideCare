@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 
-import { ComplaintWizard } from "@/components/forms/complaint-wizard";
+import { ConversationFlow } from "@/components/forms/conversation-flow";
 
 export const metadata: Metadata = {
   title: "Ceritakan keluhan motormu",
@@ -14,10 +14,11 @@ export default function KeluhanPage() {
           Ceritakan keluhan motormu
         </h1>
         <p className="text-sm leading-relaxed text-muted">
-          Jawab beberapa langkah singkat. Hasilnya berupa kemungkinan awal, bukan diagnosis pasti.
+          Ceritakan seperti sedang berbicara. Aku akan menyusunnya jadi ringkasan singkat untuk
+          mekanik. Hasilnya berupa kemungkinan awal, bukan diagnosis pasti.
         </p>
       </div>
-      <ComplaintWizard />
+      <ConversationFlow />
     </div>
   );
 }
