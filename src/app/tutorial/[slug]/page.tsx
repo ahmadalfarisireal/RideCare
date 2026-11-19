@@ -39,7 +39,7 @@ export default async function TutorialDetailPage({ params }: PageProps) {
         <ArrowLeftIcon className="size-4" />
         Kembali ke daftar tutorial
       </Link>
-      <TutorialDetail tutorial={tutorial} />
+      <TutorialDetail key={tutorial.slug} tutorial={tutorial} />
     </div>
   );
 }

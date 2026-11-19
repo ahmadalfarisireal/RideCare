@@ -13,6 +13,11 @@ export interface Tutorial {
   steps: string[];
   when_to_stop: string[];
   related_glossary_ids: string[];
+  kenapaPerlu?: string;
+  kapanDilakukan?: string;
+  sebelumMulai?: string[];
+  alasanPerLangkah?: string[];
+  tandaBenar?: string;
 }
 
 export const DIFFICULTY_LABELS: Record<TutorialDifficulty, string> = {

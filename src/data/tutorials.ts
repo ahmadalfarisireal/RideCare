@@ -32,6 +32,23 @@ export const tutorials: Tutorial[] = [
       "Kamu tidak yakin kondisi ban aman untuk digunakan; bawa ke bengkel atau teknisi kompeten.",
     ],
     related_glossary_ids: ["ban-dan-tekanan-angin"],
+    kenapaPerlu:
+      "Tekanan ban yang tepat membuat motor stabil, hemat, dan ban lebih awet. Ban kurang angin membuat motor terasa berat dan boros, serta lebih cepat aus di bagian tepinya.",
+    kapanDilakukan:
+      "Cek secara berkala dan sebelum perjalanan jauh. Ikuti anjuran jadwal di buku manual motormu.",
+    sebelumMulai: [
+      "Parkir di tempat datar, saat ban masih dingin",
+      "Cari angka tekanan anjuran di stiker pada motor atau buku manual",
+    ],
+    alasanPerLangkah: [
+      "Ban yang baru dipakai jauh menjadi hangat dan angkanya naik, jadi hasil ukur tidak akurat.",
+      "Tiap motor berbeda, dan ban depan bisa berbeda dari ban belakang. Jangan memakai angka dari ingatan.",
+      "Kalau miring, udara bocor dan angkanya tidak tepat.",
+      "Terlalu keras atau terlalu lembek sama-sama membuat motor kurang stabil.",
+      "Tutup melindungi pentil dari debu yang bisa membuat bocor halus.",
+      "Cari benda tajam, retakan, atau benjolan. Kalau ada, hentikan dan ke bengkel.",
+    ],
+    tandaBenar: "Semua langkah selesai. Kalau angkanya sudah sesuai anjuran, kamu beres.",
   },
   {
     slug: "ganti-oli-mesin",
