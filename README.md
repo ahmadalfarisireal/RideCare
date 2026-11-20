@@ -1,6 +1,6 @@
 # RideCare
 
-Website edukasi dan asisten persiapan servis motor untuk pemilik motor di Indonesia. Tagline: **Pahami motormu, hindari digetok.**
+Website edukasi dan asisten persiapan servis motor untuk pemilik motor di Indonesia. Tagline: **Servis lebih paham, biaya lebih aman.**
 
 Status: **Tahap 2 — scaffold dan beranda.** Fitur analisis keluhan, kamus, dan tutorial belum diimplementasikan.
 

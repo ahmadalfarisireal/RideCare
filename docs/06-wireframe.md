@@ -73,8 +73,8 @@ Navigasi mobile memakai menu ringkas; aksi utama selalu berupa tombol lebar penu
 ┌──────────────────────────────────────┐
 │ RideCare                    [☰]      │
 ├──────────────────────────────────────┤
-│  Pahami motormu,                     │
-│  hindari digetok.                    │
+│  Servis lebih paham,                 │
+│  biaya lebih aman.                   │
 │                                      │
 │  Susun keluhan sebelum ke bengkel.   │
 │  Gratis, tanpa akun.                 │
