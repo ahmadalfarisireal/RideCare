@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import { Barlow, Barlow_Condensed, IBM_Plex_Mono } from "next/font/google";
 import type { ReactNode } from "react";
 
+import { BottomNav } from "@/components/layout/bottom-nav";
 import { Footer } from "@/components/layout/footer";
 import { Header } from "@/components/layout/header";
 import { SITE } from "@/lib/constants";
@@ -59,7 +60,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
       lang="id"
       className={`h-full ${display.variable} ${body.variable} ${mono.variable}`}
     >
-      <body className="flex min-h-full flex-col bg-background font-sans text-foreground antialiased">
+      <body className="flex min-h-full flex-col bg-background pb-16 font-sans text-foreground antialiased sm:pb-0">
         <a
           href="#konten"
           className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[60] focus:rounded-lg focus:bg-accent focus:px-4 focus:py-2 focus:text-sm focus:font-semibold focus:text-accent-ink"
@@ -71,6 +72,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
           {children}
         </main>
         <Footer />
+        <BottomNav />
       </body>
     </html>
   );

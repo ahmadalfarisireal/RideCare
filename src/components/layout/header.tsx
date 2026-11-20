@@ -4,7 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 
 import { Logo } from "@/components/ui/logo";
-import { PRIMARY_TABS } from "@/lib/constants";
+import { PRIMARY_TABS, SITE } from "@/lib/constants";
 import { cn } from "@/lib/utils";
 
 export function isTabActive(href: string, pathname: string | null): boolean {
@@ -28,7 +28,7 @@ export function Header() {
           <Logo />
           <div className="flex items-center gap-3 sm:gap-4">
             <span className="hidden font-mono text-[10px] uppercase tracking-[0.08em] text-muted sm:inline">
-              Pahami motormu, hindari digetok
+              {SITE.tagline}
             </span>
             <Link
               href="/tentang"
@@ -39,7 +39,10 @@ export function Header() {
           </div>
         </div>
 
-        <nav aria-label="Menu utama" className="grid grid-cols-4 gap-1">
+        <nav
+          aria-label="Menu utama"
+          className="hidden grid-cols-4 gap-1 sm:grid"
+        >
           {PRIMARY_TABS.map((tab) => {
             const active = isTabActive(tab.href, pathname);
             return (
