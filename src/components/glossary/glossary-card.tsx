@@ -18,6 +18,17 @@ const DIY_STYLES: Record<GlossaryDiy, string> = {
   bengkel: "border-danger/40 bg-danger/10 text-danger",
 };
 
+const DIY_BADGE_LABELS: Record<GlossaryDiy, string> = {
+  ...GLOSSARY_DIY_LABELS,
+  boleh: "Boleh dicek",
+};
+
+const DIY_BADGE_STYLES: Record<GlossaryDiy, string> = {
+  boleh: "border-safe bg-safe text-on-sem",
+  hati: "border-warning bg-warning text-on-sem",
+  bengkel: "border-danger bg-danger text-on-sem",
+};
+
 function DiyMeter({ level }: { level: GlossaryDiy }) {
   return (
     <div
@@ -89,10 +100,20 @@ export function GlossaryCard({
             <p className="text-base font-semibold text-foreground">{term.term}</p>
             <p className="text-sm leading-relaxed text-muted">{summary}</p>
           </div>
-          <div className="flex items-center gap-2">
+          <div className="flex flex-wrap items-center justify-end gap-2">
             <Badge variant="outline">
               {term.categoryLabel ?? GLOSSARY_CATEGORY_LABELS[term.category]}
             </Badge>
+            {term.diy ? (
+              <span
+                className={cn(
+                  "rounded-full border px-2 py-0.5 font-mono text-[10px] font-medium uppercase tracking-[0.06em]",
+                  DIY_BADGE_STYLES[term.diy],
+                )}
+              >
+                {DIY_BADGE_LABELS[term.diy]}
+              </span>
+            ) : null}
             <ChevronRightIcon className="size-4 shrink-0 text-muted transition-transform group-open:rotate-90" />
           </div>
         </div>

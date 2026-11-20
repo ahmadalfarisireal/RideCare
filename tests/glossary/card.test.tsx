@@ -18,6 +18,24 @@ describe("GlossaryCard", () => {
     expect(html).toContain("Kondisi busi saya seperti apa? Boleh saya lihat?");
   });
 
+  it("menampilkan lencana DIY pada kartu yang masih tertutup", () => {
+    const busi = glossaryTerms.find((term) => term.id === "busi");
+    const kampasRem = glossaryTerms.find((term) => term.id === "kampas-rem");
+    expect(busi).toBeDefined();
+    expect(kampasRem).toBeDefined();
+
+    const busiHtml = renderToStaticMarkup(
+      <GlossaryCard term={busi!} relatedTerms={[]} />,
+    );
+    const remHtml = renderToStaticMarkup(
+      <GlossaryCard term={kampasRem!} relatedTerms={[]} />,
+    );
+
+    expect(busiHtml).toMatch(/bg-warning text-on-sem[^>]*>Hati-hati</);
+    expect(remHtml).toMatch(/bg-danger text-on-sem[^>]*>Bengkel saja</);
+    expect(remHtml).not.toMatch(/bg-safe text-on-sem[^>]*>Boleh dicek</);
+  });
+
   it("tetap menampilkan istilah lama tanpa field baru", () => {
     const legacyTerm: GlossaryTerm = {
       id: "legacy-term",
@@ -33,5 +51,8 @@ describe("GlossaryCard", () => {
     expect(html).toContain("Komponen terkait");
     expect(html).toContain("Komponen lama");
     expect(html).not.toContain("Bayangkan begini");
+    expect(html).not.toMatch(
+      /bg-safe text-on-sem|bg-warning text-on-sem|bg-danger text-on-sem/,
+    );
   });
 });
