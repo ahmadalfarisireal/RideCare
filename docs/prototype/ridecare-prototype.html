@@ -10,7 +10,7 @@
   --bg:#121110; --surface:#1b1a17; --surface-2:#252320; --line:#37332d;
   --fg:#f3efe6; --muted:#a8a193;
   --accent:#ffc21a; --accent-ink:#1a1400; --accent-text:#ffc21a;
-  --good:#38c978; --warn:#ff8a1f; --bad:#ff5040;
+  --good:#38c978; --warn:#ff8a1f; --bad:#ff5040; --on-sem:#0b0a09;
   --display:'Barlow Condensed','Arial Narrow',sans-serif;
   --body:'Barlow',system-ui,-apple-system,'Segoe UI',sans-serif;
   --mono:'IBM Plex Mono',ui-monospace,Menlo,monospace;
@@ -21,7 +21,7 @@
     --bg:#eeeeea; --surface:#ffffff; --surface-2:#e5e4de; --line:#cfccc2;
     --fg:#1c1a16; --muted:#5e5a50;
     --accent:#ffc21a; --accent-ink:#1a1400; --accent-text:#7a5200;
-    --good:#13803f; --warn:#b85200; --bad:#c4281a;
+    --good:#13803f; --warn:#b85200; --bad:#c4281a; --on-sem:#ffffff;
     color-scheme:light;
   }
 }
@@ -29,7 +29,7 @@
   --bg:#eeeeea; --surface:#ffffff; --surface-2:#e5e4de; --line:#cfccc2;
   --fg:#1c1a16; --muted:#5e5a50;
   --accent:#ffc21a; --accent-ink:#1a1400; --accent-text:#7a5200;
-  --good:#13803f; --warn:#b85200; --bad:#c4281a;
+  --good:#13803f; --warn:#b85200; --bad:#c4281a; --on-sem:#ffffff;
   color-scheme:light;
 }
 *{box-sizing:border-box}
@@ -169,7 +169,7 @@ main{padding-block:24px 0}
 .tbody ul{margin:0;padding-left:20px;display:grid;gap:4px}
 .meter{display:grid;grid-template-columns:repeat(3,1fr);gap:4px}
 .meter span{text-align:center;padding:8px 4px;border-radius:8px;font:500 11px var(--mono);letter-spacing:.05em;text-transform:uppercase;background:var(--surface-2);color:var(--muted);border:1px solid transparent}
-.meter span.on.g{background:var(--good);color:#06140c} .meter span.on.o{background:var(--warn);color:#1c0c00} .meter span.on.r{background:var(--bad);color:#1c0300}
+.meter span.on.g{background:var(--good);color:var(--on-sem)} .meter span.on.o{background:var(--warn);color:var(--on-sem)} .meter span.on.r{background:var(--bad);color:var(--on-sem)}
 .related{display:flex;gap:8px;flex-wrap:wrap}
 .related button{min-height:36px;padding:4px 12px;border-radius:99px;border:1px solid var(--line);background:transparent;cursor:pointer;font-weight:600;color:var(--accent-text)}
 .related button:hover{border-color:var(--accent)}
@@ -197,6 +197,39 @@ main{padding-block:24px 0}
 .toast{position:fixed;left:50%;bottom:calc(16px + env(safe-area-inset-bottom,0px));transform:translate(-50%,20px);background:var(--fg);color:var(--bg);padding:10px 16px;border-radius:99px;font-weight:600;opacity:0;pointer-events:none;transition:opacity .2s,transform .2s;z-index:20}
 .toast.show{opacity:1;transform:translate(-50%,0)}
 
+/* polish: beranda, penanda tick, gerak, lencana kamus */
+.logo{text-decoration:none;color:inherit}
+a.btn{text-decoration:none}
+section[role="tabpanel"]:not([hidden]){animation:rise .35s ease both}
+.home{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,380px);gap:28px;align-items:center;padding-block:8px 4px}
+.home-copy{display:grid;gap:14px;justify-items:start;min-width:0}
+.home-copy h1{font-size:clamp(40px,8vw,66px);line-height:1}
+.kicker{color:var(--accent-text)}
+.lead{color:var(--muted);max-width:46ch;font-size:18px}
+.cluster{display:grid;gap:12px;min-width:0}
+.cluster .gauge{max-width:300px;margin:0 auto}
+.chips-row{display:flex;flex-wrap:wrap;gap:8px}
+.chips-row .chip{min-height:40px;padding:8px 12px;flex-direction:row}
+.chip.on{border-color:var(--accent);background:var(--surface-2)}
+.small{font-size:14px}
+.ticks{height:12px;margin:30px 0 26px;background:repeating-linear-gradient(90deg,var(--muted) 0 2px,transparent 2px 60px) bottom/100% 12px no-repeat,repeating-linear-gradient(90deg,var(--line) 0 2px,transparent 2px 12px) bottom/100% 6px no-repeat}
+.routes{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px}
+.route{display:grid;gap:6px;align-content:start;padding:16px;border:1px solid var(--line);border-radius:14px;background:var(--surface);text-decoration:none;color:inherit;transition:border-color .15s,transform .15s;min-width:0}
+.route:hover{border-color:var(--accent);transform:translateY(-2px)}
+.route .ico{width:40px;height:40px;border-radius:10px;background:var(--surface-2);color:var(--accent-text);display:grid;place-items:center;margin-bottom:4px}
+.route b{font:700 24px/1.1 var(--display)}
+.route .d{color:var(--muted);font-size:15px}
+.route i{font:500 13px var(--mono);color:var(--accent-text);font-style:normal}
+.tipbox{margin-top:26px;align-items:center;flex-wrap:wrap}
+.tipbox p{flex:1 1 240px;min-width:0}
+.t-top{display:flex;gap:10px;align-items:center;flex-wrap:wrap;grid-column:1}
+.t-diy{font:500 10px var(--mono);letter-spacing:.06em;text-transform:uppercase;padding:2px 8px;border-radius:99px;color:var(--on-sem)}
+.t-diy.d0{background:var(--good)} .t-diy.d1{background:var(--warn)} .t-diy.d2{background:var(--bad)}
+.check:has(input:checked) input{animation:pop .28s ease}
+@keyframes pop{50%{transform:scale(1.25)}}
+@media (max-width:760px){
+  .home{grid-template-columns:1fr}
+}
 @media (max-width:640px){
   .gauge-card{grid-template-columns:1fr}
   .gauge{max-width:280px;margin:0 auto}
@@ -213,10 +246,10 @@ main{padding-block:24px 0}
 <header class="top">
   <div class="wrap">
     <div class="brand">
-      <div class="logo">
+      <a class="logo" href="#beranda" aria-label="RideCare, ke beranda">
         <svg viewBox="0 0 40 40" aria-hidden="true"><circle cx="20" cy="22" r="16" fill="none" stroke="var(--line)" stroke-width="4"/><path d="M6 25a14 14 0 0 1 28 0" fill="none" stroke="var(--accent)" stroke-width="4" stroke-linecap="round"/><path d="M20 24l8-9" stroke="var(--fg)" stroke-width="3" stroke-linecap="round"/><circle cx="20" cy="24" r="3" fill="var(--fg)"/></svg>
         <b>RideCare</b>
-      </div>
+      </a>
       <span class="mono tag">Pahami motormu, hindari digetok</span>
     </div>
     <nav class="tabs" role="tablist" aria-label="Menu utama">
@@ -229,6 +262,38 @@ main{padding-block:24px 0}
 </header>
 
 <main class="wrap">
+  <!-- BERANDA -->
+  <section id="p-beranda" role="tabpanel" aria-label="Beranda">
+    <div class="home">
+      <div class="home-copy">
+        <p class="mono kicker">Servis motor tanpa tebak-tebakan</p>
+        <h1>Pahami motormu, hindari digetok.</h1>
+        <p class="lead">Ceritakan keluhanmu, dapatkan dugaan awal beserta tingkat urgensinya, lalu bawa pesan siap kirim ke mekanik.</p>
+        <div class="btn-row">
+          <a class="btn pri" href="#keluhan">Mulai cek keluhan</a>
+          <a class="btn" href="#anti-getok">Checklist anti getok</a>
+        </div>
+      </div>
+      <div class="cluster panel">
+        <p class="mono" style="color:var(--muted)">Coba contoh</p>
+        <div id="home-gauge"></div>
+        <h2 id="home-title" class="urg-title"></h2>
+        <p id="home-teaser"></p>
+        <div id="home-chips" class="chips-row" role="group" aria-label="Contoh keluhan"></div>
+        <p class="disc small">Contoh singkat, bukan diagnosis. Hasil lengkap ada di Cek keluhan.</p>
+      </div>
+    </div>
+    <div class="ticks" aria-hidden="true"></div>
+    <h2 class="sec-h">Mau mulai dari mana?</h2>
+    <div class="routes">
+      <a class="route" href="#keluhan"><span class="ico"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12a8 8 0 0 1-11.6 7.1L3 20l1-4.6A8 8 0 1 1 21 12z"/></svg></span><b>Cek keluhan</b><span class="d">Ceritakan gejalanya. Dapat dugaan awal, urgensi, dan pesan untuk mekanik.</span><i>Mulai →</i></a>
+      <a class="route" href="#kamus"><span class="ico"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20V3H6.5A2.5 2.5 0 0 0 4 5.5z"/><path d="M4 19.5V22h16v-2.5"/></svg></span><b>Kamus bengkel</b><span class="d">Istilah dijelaskan dengan analogi sehari-hari.</span><i>Buka →</i></a>
+      <a class="route" href="#tutorial"><span class="ico"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94z"/></svg></span><b>Tutorial</b><span class="d">Perawatan dasar dengan alasan di setiap langkah.</span><i>Buka →</i></a>
+      <a class="route" href="#anti-getok"><span class="ico"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/><path d="m9 12 2 2 4-4"/></svg></span><b>Anti getok</b><span class="d">Hal yang perlu kamu tanyakan sebelum menyetujui servis.</span><i>Buka →</i></a>
+    </div>
+    <div class="tip tipbox"><b>Tip bengkel</b><p id="home-tip"></p><button type="button" id="tip-next" class="btn">Tip lain</button></div>
+  </section>
+
   <!-- KELUHAN -->
   <section id="p-keluhan" role="tabpanel" aria-labelledby="t-keluhan">
     <div class="intro">
@@ -312,16 +377,17 @@ var esc=function(s){return String(s).replace(/[&<>"]/g,function(c){return {'&':'
 var pick=function(a){return a[Math.floor(Math.random()*a.length)];};
 
 /* ---------- routing ---------- */
-var TABS=['keluhan','kamus','tutorial','anti-getok'];
+var TABS=['beranda','keluhan','kamus','tutorial','anti-getok'];
 function route(){
   var h=(location.hash||'').slice(1);
-  if(TABS.indexOf(h)<0)h='keluhan';
+  if(TABS.indexOf(h)<0)h='beranda';
   TABS.forEach(function(t){
     $('#p-'+t).hidden=(t!==h);
-    var b=$('#t-'+t);b.setAttribute('aria-selected',t===h?'true':'false');
+    var b=$('#t-'+t);if(b)b.setAttribute('aria-selected',t===h?'true':'false');
   });
+  if(h==='beranda')homeSweep();
 }
-window.addEventListener('hashchange',route);route();
+window.addEventListener('hashchange',route);
 
 /* ---------- toast + copy ---------- */
 var toastT;
@@ -699,7 +765,7 @@ KAMUS.forEach(function(k){
   var d=el('details','term');d.id='term-'+k.id;
   var rel=k.related.map(function(r){var t=KAMUS.filter(function(x){return x.id===r;})[0];return t?'<button type="button" data-rel="'+t.id+'">'+esc(t.term)+'</button>':'';}).join('');
   var m=DIYM[k.diy];
-  d.innerHTML='<summary><span class="t-cat">'+esc(k.cat)+'</span><span class="t-name" style="grid-column:1">'+esc(k.term)+'</span><span class="t-short">'+esc(k.short)+'</span></summary>'+
+  d.innerHTML='<summary><span class="t-top"><span class="t-cat">'+esc(k.cat)+'</span><span class="t-diy d'+m+'">'+['Boleh dicek','Hati-hati','Bengkel saja'][m]+'</span></span><span class="t-name" style="grid-column:1">'+esc(k.term)+'</span><span class="t-short">'+esc(k.short)+'</span></summary>'+
    '<div class="tbody">'+
    '<div class="analogy"><h4>Bayangkan begini</h4><p>'+esc(k.analogy)+'</p></div>'+
    '<div><h4>Apa yang terjadi di motormu</h4><p>'+esc(k.how)+'</p></div>'+
@@ -789,6 +855,41 @@ PHRASES.forEach(function(t){
   r.appendChild(b);ph.appendChild(r);
 });
 
+/* ---------- beranda ---------- */
+var HOME=[
+ {label:'Susah hidup pagi',level:'segera',teaser:'Dugaan teratas: aki lemah atau pengisian aki bermasalah. Starter yang berbunyi lemah jadi petunjuk utamanya.'},
+ {label:'Tarikan berat dan boros',level:'aman',teaser:'Dugaan teratas: filter udara kotor atau busi aus. Keduanya perawatan rutin, jadi masih aman ditunda sebentar.'},
+ {label:'Rem berbunyi cit',level:'segera',teaser:'Dugaan teratas: kampas rem tipis atau kotor. Rem selalu diserahkan ke bengkel, tanpa bongkar sendiri.'},
+ {label:'Bunyi logam saat mengerem',level:'jangan',teaser:'Berhenti dulu. Bunyi logam bergesek bisa berarti kampas sudah habis, jadi motor sebaiknya tidak dikendarai.'}
+];
+var homeLevel='segera',hg=$('#home-gauge'),hc=$('#home-chips');
+hg.innerHTML=gaugeSVG(homeLevel);
+function setHome(i){
+  var s=HOME[i];homeLevel=s.level;
+  var zs=hg.querySelectorAll('.zone'),ls=hg.querySelectorAll('.glabels span');
+  ['aman','segera','jangan'].forEach(function(l,n){zs[n].style.opacity=(l===s.level?1:0.28);ls[n].className=(l===s.level?'on':'');});
+  hg.querySelector('svg').setAttribute('aria-label','Tingkat urgensi: '+URG[s.level].t);
+  hg.querySelector('.needle').style.transform='rotate('+URG[s.level].needle+'deg)';
+  var t=$('#home-title');t.className='urg-title '+s.level;t.textContent=URG[s.level].t;
+  $('#home-teaser').textContent=s.teaser;
+  [].forEach.call(hc.children,function(c,n){c.classList.toggle('on',n===i);c.setAttribute('aria-pressed',n===i?'true':'false');});
+}
+function homeSweep(){
+  var n=hg.querySelector('.needle');if(!n)return;
+  var target='rotate('+URG[homeLevel].needle+'deg)';
+  if(reduce){n.style.transform=target;return;}
+  n.style.transition='none';n.style.transform='rotate(0deg)';
+  void n.getBoundingClientRect();
+  n.style.transition='';n.style.transform='rotate(180deg)';
+  setTimeout(function(){n.style.transform=target;},650);
+}
+HOME.forEach(function(s,i){var b=el('button','chip',esc(s.label));b.type='button';b.addEventListener('click',function(){setHome(i);});hc.appendChild(b);});
+var tipI=0;
+function showTip(){$('#home-tip').textContent=SYMS[tipI%SYMS.length].tip;}
+$('#tip-next').addEventListener('click',function(){tipI++;showTip();});
+setHome(0);showTip();
+
 startFlow();
+route();
 })();
 </script>
