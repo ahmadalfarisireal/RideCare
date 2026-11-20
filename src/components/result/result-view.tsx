@@ -16,7 +16,7 @@ import { buttonVariants } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ArrowLeftIcon, ArrowRightIcon, ShieldIcon } from "@/components/ui/icons";
 import { ChecklistView } from "@/components/result/checklist-view";
-import { SafetyAlert } from "@/components/result/safety-alert";
+import { DangerBanner } from "@/components/result/danger-banner";
 import { CauseCard } from "@/components/result/cause-card";
 import { MechanicQuestions } from "@/components/result/mechanic-questions";
 import { UrgencyGauge } from "@/components/result/urgency-gauge";
@@ -95,27 +95,21 @@ export function ResultView() {
         </button>
       </div>
 
-      {showSafety ? <SafetyAlert urgency={view.urgency} /> : null}
-      <UrgencyGauge urgency={view.urgency} />
+      {showSafety ? <DangerBanner urgency={view.urgency} /> : null}
 
-      <Card>
-        <CardHeader>
-          <CardTitle>Ringkasan keluhan</CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-3">
-          <p className="text-sm leading-relaxed text-foreground">{view.intro}</p>
-          <p className="whitespace-pre-line text-sm leading-relaxed text-muted">
-            {view.summary}
-          </p>
-          <p className="font-mono text-xs uppercase tracking-[0.08em] text-muted">
-            {view.motorLabel}
-          </p>
-        </CardContent>
-      </Card>
+      <section className="space-y-2">
+        <UrgencyGauge urgency={view.urgency} />
+        <p className="text-center text-sm leading-relaxed text-foreground">
+          {view.urgencyExplanation}
+        </p>
+        <p className="text-center font-mono text-[11px] uppercase tracking-wide text-muted">
+          Skala urgensi: 1 aman ditunda · 2 perlu cek · 3 jangan jalan
+        </p>
+      </section>
 
       <section className="space-y-3">
         <div>
-          <h2 className="text-lg font-semibold text-foreground">Kemungkinan penyebab</h2>
+          <h2 className="text-lg font-semibold text-foreground">Yang paling mungkin</h2>
           <p className="text-sm text-muted">
             Diurutkan dari yang paling cocok dengan ceritamu.
           </p>
@@ -138,6 +132,21 @@ export function ResultView() {
         )}
         <p className="text-xs text-muted">Ini hanya kemungkinan awal, bukan diagnosis pasti.</p>
       </section>
+
+      <Card>
+        <CardHeader>
+          <CardTitle>Ringkasan keluhan</CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-3">
+          <p className="text-sm leading-relaxed text-foreground">{view.intro}</p>
+          <p className="whitespace-pre-line text-sm leading-relaxed text-muted">
+            {view.summary}
+          </p>
+          <p className="font-mono text-xs uppercase tracking-[0.08em] text-muted">
+            {view.motorLabel}
+          </p>
+        </CardContent>
+      </Card>
 
       <Card>
         <CardHeader>
