@@ -7,7 +7,7 @@ import { Logo } from "@/components/ui/logo";
 import { PRIMARY_TABS } from "@/lib/constants";
 import { cn } from "@/lib/utils";
 
-function isTabActive(href: string, pathname: string | null): boolean {
+export function isTabActive(href: string, pathname: string | null): boolean {
   if (!pathname) return false;
   if (href === "/keluhan") {
     return ["/keluhan", "/hasil", "/pesan-mekanik"].includes(pathname);
