@@ -38,7 +38,7 @@ export const HOME_TIPS = [
   "Busi dan filter udara termasuk penyebab brebet yang paling sering, dan keduanya masuk perawatan rutin.",
   "Mati hanya saat berhenti biasanya berkaitan dengan putaran idle, bukan dengan tenaga saat berjalan.",
   "Bunyi cit tipis tidak selalu berarti rem rusak, tetapi bunyi logam kasar selalu perlu pemeriksaan segera.",
-  "Pada motor matik, getar saat mulai jalan sering kali berasal dari area CVT.",
+  "Pada motor matik, getar saat mulai jalan bisa berkaitan dengan area CVT, tapi penyebab pastinya perlu dicek bengkel.",
   "Lampu yang redup saat idle lalu terang saat gas ditarik bisa jadi tanda pengisian aki kurang baik.",
 ] as const;
 
