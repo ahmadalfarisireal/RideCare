@@ -13,7 +13,7 @@ const variantStyles: Record<ButtonVariant, string> = {
   secondary:
     "border border-border bg-surface text-foreground hover:border-accent/60 hover:bg-surface-2",
   ghost: "text-foreground hover:bg-surface-2",
-  danger: "bg-danger text-white hover:bg-danger/90",
+  danger: "bg-danger text-on-sem hover:bg-danger/90",
 };
 
 const sizeStyles: Record<ButtonSize, string> = {

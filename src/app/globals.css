@@ -13,6 +13,7 @@
   --good: #38c978;
   --warn: #ff8a1f;
   --bad: #ff5040;
+  --on-sem: #0b0a09;
   --accent-strong: var(--warn);
 
   --display: var(--font-barlow-condensed), "Arial Narrow", sans-serif;
@@ -36,6 +37,7 @@
     --good: #13803f;
     --warn: #b85200;
     --bad: #c4281a;
+    --on-sem: #ffffff;
 
     color-scheme: light;
   }
@@ -54,6 +56,7 @@
   --good: #13803f;
   --warn: #b85200;
   --bad: #c4281a;
+  --on-sem: #ffffff;
 
   color-scheme: light;
 }
@@ -72,6 +75,7 @@
   --color-danger: var(--bad);
   --color-warning: var(--warn);
   --color-safe: var(--good);
+  --color-on-sem: var(--on-sem);
 
   --font-display: var(--display);
   --font-sans: var(--body);
@@ -108,5 +112,57 @@
     html {
       scroll-behavior: auto;
     }
+
+    *,
+    *::before,
+    *::after {
+      animation: none !important;
+      transition: none !important;
+    }
   }
+}
+
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes needle-sweep {
+  from {
+    transform: rotate(-90deg);
+  }
+}
+
+@keyframes check-pop {
+  50% {
+    transform: scale(1.25);
+  }
+}
+
+.page-enter {
+  animation: rise 350ms ease both;
+}
+
+.home-gauge-sweep line {
+  animation: needle-sweep 900ms cubic-bezier(0.3, 1.35, 0.5, 1) backwards;
+}
+
+main input[type="checkbox"]:checked {
+  animation: check-pop 280ms ease;
+}
+
+.ticks {
+  height: 14px;
+  background-image: repeating-linear-gradient(
+    90deg,
+    var(--line) 0 1px,
+    transparent 1px 8px
+  );
+  opacity: 0.6;
 }

@@ -67,7 +67,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
           Lewati ke konten
         </a>
         <Header />
-        <main id="konten" className="flex-1">
+        <main id="konten" className="page-enter flex-1">
           {children}
         </main>
         <Footer />
