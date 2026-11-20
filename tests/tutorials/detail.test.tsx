@@ -3,6 +3,7 @@ import { describe, expect, it } from "vitest";
 
 import { TutorialDetail } from "@/components/tutorial/tutorial-detail";
 import { getTutorialBySlug } from "@/data/tutorials";
+import type { Tutorial } from "@/types/tutorial";
 
 describe("TutorialDetail", () => {
   it("merender checklist, progres, dan konten baru untuk cek-tekanan-ban", () => {
@@ -35,7 +36,18 @@ describe("TutorialDetail", () => {
   });
 
   it("tetap merender checklist dan pengaman untuk tutorial tanpa field baru", () => {
-    const tutorial = getTutorialBySlug("ganti-oli-mesin")!;
+    const tutorial: Tutorial = {
+      slug: "fixture-tanpa-field-baru",
+      title: "Tutorial tanpa field baru",
+      motorcycle_types: ["bebek"],
+      difficulty: "mudah",
+      estimated_time: "Sekitar 5 menit",
+      tools: ["Lap bersih"],
+      safety_warnings: ["Pastikan motor stabil sebelum mulai."],
+      steps: ["Parkirkan motor di tempat datar dan pastikan posisinya stabil."],
+      when_to_stop: ["Kamu ragu dengan kondisi motor; hentikan dan ke bengkel."],
+      related_glossary_ids: [],
+    };
     const html = renderToStaticMarkup(<TutorialDetail tutorial={tutorial} />);
 
     expect(html).toContain("Progres langkah");
