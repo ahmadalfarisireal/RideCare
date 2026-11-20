@@ -1,20 +1,20 @@
 @import "tailwindcss";
 
 :root {
-  --bg: #121110;
-  --surface: #1b1a17;
-  --surface-2: #252320;
-  --line: #37332d;
-  --fg: #f3efe6;
-  --muted: #a8a193;
-  --accent: #ffc21a;
-  --accent-ink: #1a1400;
-  --accent-text: #ffc21a;
-  --good: #38c978;
-  --warn: #ff8a1f;
-  --bad: #ff5040;
-  --on-sem: #0b0a09;
-  --accent-strong: var(--warn);
+  --bg: #0E0D0C;
+  --surface: #181614;
+  --surface-2: #221F1C;
+  --line: #34302B;
+  --fg: #F4F0EA;
+  --muted: #ABA499;
+  --accent: #4CC2FF;
+  --accent-ink: #03161F;
+  --accent-text: #4CC2FF;
+  --good: #38C978;
+  --warn: #FF8A1F;
+  --bad: #FF5040;
+  --on-sem: #0B0A09;
+  --accent-strong: var(--accent);
 
   --display: var(--font-barlow-condensed), "Arial Narrow", sans-serif;
   --body: var(--font-barlow), ui-sans-serif, system-ui, sans-serif;
@@ -25,38 +25,38 @@
 
 @media (prefers-color-scheme: light) {
   :root:not([data-theme="dark"]) {
-    --bg: #eeeeea;
-    --surface: #ffffff;
-    --surface-2: #e5e4de;
-    --line: #cfccc2;
-    --fg: #1c1a16;
-    --muted: #5e5a50;
-    --accent: #ffc21a;
-    --accent-ink: #1a1400;
-    --accent-text: #7a5200;
-    --good: #13803f;
-    --warn: #b85200;
-    --bad: #c4281a;
-    --on-sem: #ffffff;
+    --bg: #F7F4EF;
+    --surface: #FFFFFF;
+    --surface-2: #EFEBE4;
+    --line: #D9D3C9;
+    --fg: #1B1916;
+    --muted: #5D564D;
+    --accent: #0A6EA8;
+    --accent-ink: #FFFFFF;
+    --accent-text: #0A6EA8;
+    --good: #13803F;
+    --warn: #B85200;
+    --bad: #C4281A;
+    --on-sem: #FFFFFF;
 
     color-scheme: light;
   }
 }
 
 :root[data-theme="light"] {
-  --bg: #eeeeea;
-  --surface: #ffffff;
-  --surface-2: #e5e4de;
-  --line: #cfccc2;
-  --fg: #1c1a16;
-  --muted: #5e5a50;
-  --accent: #ffc21a;
-  --accent-ink: #1a1400;
-  --accent-text: #7a5200;
-  --good: #13803f;
-  --warn: #b85200;
-  --bad: #c4281a;
-  --on-sem: #ffffff;
+  --bg: #F7F4EF;
+  --surface: #FFFFFF;
+  --surface-2: #EFEBE4;
+  --line: #D9D3C9;
+  --fg: #1B1916;
+  --muted: #5D564D;
+  --accent: #0A6EA8;
+  --accent-ink: #FFFFFF;
+  --accent-text: #0A6EA8;
+  --good: #13803F;
+  --warn: #B85200;
+  --bad: #C4281A;
+  --on-sem: #FFFFFF;
 
   color-scheme: light;
 }
