@@ -1,6 +1,6 @@
 export const SITE = {
   name: "RideCare",
-  tagline: "Pahami motormu, hindari digetok.",
+  tagline: "Servis lebih paham, biaya lebih aman.",
   description:
     "RideCare membantu pemilik motor di Indonesia menyusun keluhan sebelum ke bengkel, memahami perawatan dasar, dan menghindari biaya servis yang tidak transparan.",
 } as const;

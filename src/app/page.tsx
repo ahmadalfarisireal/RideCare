@@ -64,8 +64,7 @@ export default function HomePage() {
               Servis motor tanpa tebak-tebakan
             </p>
             <h1 className="mt-5 text-4xl font-bold leading-tight tracking-tight sm:text-5xl">
-              Pahami motormu,{" "}
-              <span className="text-accent">hindari digetok.</span>
+              Servis lebih paham, biaya lebih aman.
             </h1>
             <p className="mt-5 max-w-xl text-base leading-relaxed text-muted sm:text-lg">
               Ceritakan keluhanmu, dapatkan dugaan awal beserta tingkat

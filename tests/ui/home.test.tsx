@@ -13,7 +13,7 @@ describe("Beranda", () => {
     const html = renderToStaticMarkup(<HomePage />);
 
     expect(html).toContain("Servis motor tanpa tebak-tebakan");
-    expect(html).toContain("Pahami motormu");
+    expect(html).toContain("Servis lebih paham, biaya lebih aman.");
     expect(html).toContain('href="/keluhan"');
     expect(html).toContain('href="/checklist"');
     expect(html).toContain("Mau mulai dari mana?");
