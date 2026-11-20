@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 
 import { analyze, type AnalysisInput } from "@/lib/complaint-engine";
 import { getTutorialBySlug } from "@/data/tutorials";
+import { URGENCY_COPY } from "@/data/ui/urgency-copy";
 import { toResultView } from "@/lib/ui/analysis-view";
 import {
   clearComplaintInput,
@@ -21,6 +22,10 @@ import { CauseCard } from "@/components/result/cause-card";
 import { MechanicQuestions } from "@/components/result/mechanic-questions";
 import { UrgencyGauge } from "@/components/result/urgency-gauge";
 import { WhatsAppPanel } from "@/components/result/whatsapp-panel";
+
+const URGENCY_SCALE_LABELS = Object.values(URGENCY_COPY)
+  .map((copy, index) => `${index + 1} ${copy.label}`)
+  .join(" · ");
 
 function LoadingState() {
   return (
@@ -103,7 +108,7 @@ export function ResultView() {
           {view.urgencyExplanation}
         </p>
         <p className="text-center font-mono text-[11px] uppercase tracking-wide text-muted">
-          Skala urgensi: 1 aman ditunda · 2 perlu cek · 3 jangan jalan
+          Skala urgensi: {URGENCY_SCALE_LABELS}
         </p>
       </section>
 

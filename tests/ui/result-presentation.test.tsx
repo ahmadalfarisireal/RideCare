@@ -54,6 +54,20 @@ describe("Syarat tampil SafetyAlert", () => {
   });
 });
 
+describe("Skala urgensi", () => {
+  it("mengambil label dari sumber URGENCY_COPY", () => {
+    const source = readFileSync(
+      new URL("../../src/components/result/result-view.tsx", import.meta.url),
+      "utf8",
+    );
+
+    expect(source).toContain("Object.values(URGENCY_COPY)");
+    expect(source).toContain("Skala urgensi: {URGENCY_SCALE_LABELS}");
+    expect(source).not.toContain("2 perlu cek");
+    expect(source).not.toContain("3 jangan jalan");
+  });
+});
+
 describe("Tampilan hasil pendukung", () => {
   it("menyimpan pertanyaan mekanik dalam bagian yang bisa dibuka", () => {
     const html = renderToStaticMarkup(
