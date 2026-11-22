@@ -14,8 +14,8 @@ const variantStyles: Record<BadgeVariant, string> = {
   default: "border-border bg-surface-2 text-foreground",
   accent: "border-accent/30 bg-accent/10 text-accent",
   danger: "border-danger/30 bg-danger/10 text-danger",
-  warning: "border-warning/30 bg-warning/10 text-warning",
-  success: "border-safe/30 bg-safe/10 text-safe",
+  warning: "border-warning/30 bg-warning/10 text-warning-text",
+  success: "border-safe/30 bg-safe/10 text-safe-text",
   outline: "border-border text-muted",
 };
 

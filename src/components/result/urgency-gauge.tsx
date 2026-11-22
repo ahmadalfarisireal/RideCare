@@ -79,9 +79,14 @@ export function UrgencyGauge({
         </div>
       </div>
 
-      <div className="mt-4 grid grid-cols-3 gap-2 border-t border-current/20 pt-3 text-center font-mono text-[10px] uppercase tracking-wide opacity-60 sm:text-xs">
+      <div className="mt-4 grid grid-cols-3 gap-2 border-t border-current/20 pt-3 text-center font-mono text-[10px] uppercase tracking-wide sm:text-xs">
         {ZONE_LABELS.map((label, index) => (
-          <span key={label} className={cn(index === activeZone && "font-bold opacity-100")}>
+          <span
+            key={label}
+            className={cn(
+              index === activeZone ? "font-bold text-foreground" : "text-muted",
+            )}
+          >
             {label}
           </span>
         ))}
