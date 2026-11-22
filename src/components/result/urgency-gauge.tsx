@@ -69,7 +69,7 @@ export function UrgencyGauge({
         </svg>
 
         <div className="space-y-2 text-center sm:text-left">
-          <p className="font-mono text-xs uppercase tracking-[0.08em] opacity-80">
+          <p className="font-mono text-xs uppercase tracking-[0.08em] text-muted">
             Tingkat urgensi
           </p>
           <p className="font-display text-2xl font-bold uppercase tracking-wide">

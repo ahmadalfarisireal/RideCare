@@ -163,8 +163,12 @@ describe("Tema bawaan", () => {
 
   it("label zona gauge memakai warna bukan opacity untuk redup/aktif", () => {
     expect(gauge).not.toContain("opacity-60");
+    expect(gauge).not.toContain("opacity-80");
     expect(gauge).toContain(
       'index === activeZone ? "font-bold text-foreground" : "text-muted"',
+    );
+    expect(gauge).toContain(
+      "font-mono text-xs uppercase tracking-[0.08em] text-muted",
     );
   });
 
