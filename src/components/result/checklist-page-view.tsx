@@ -63,7 +63,7 @@ export function ChecklistPageView() {
 
       <div className="space-y-2">
         <h1 className="text-2xl font-bold text-foreground sm:text-3xl">
-          Checklist Anti Getok Harga
+          Siap Bengkel
         </h1>
         <p className="text-sm leading-relaxed text-muted">
           Centang yang sudah kamu siapkan. Tujuannya satu: kamu mengerti apa yang dikerjakan dan

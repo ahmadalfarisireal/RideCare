@@ -44,7 +44,7 @@ export function ChecklistGroupList({ items }: { items: string[] }) {
           <div
             className="h-2 overflow-hidden rounded-full bg-surface-2"
             role="progressbar"
-            aria-label="Progres checklist anti getok"
+            aria-label="Progres Siap Bengkel"
             aria-valuemin={0}
             aria-valuemax={total}
             aria-valuenow={completed}

@@ -30,7 +30,7 @@ export const PRIMARY_TABS = [
   { href: "/keluhan", label: "Keluhan" },
   { href: "/kamus", label: "Kamus" },
   { href: "/tutorial", label: "Tutorial" },
-  { href: "/checklist", label: "Anti Getok" },
+  { href: "/checklist", label: "Siap Bengkel" },
 ] as const;
 
 export const BOTTOM_NAV_ITEMS = [
@@ -38,5 +38,5 @@ export const BOTTOM_NAV_ITEMS = [
   { href: "/keluhan", label: "Keluhan" },
   { href: "/kamus", label: "Kamus" },
   { href: "/tutorial", label: "Tutorial" },
-  { href: "/checklist", label: "Anti getok" },
+  { href: "/checklist", label: "Siap Bengkel" },
 ] as const;

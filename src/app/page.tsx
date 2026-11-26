@@ -39,7 +39,7 @@ const routeCards = [
   },
   {
     href: "/checklist",
-    title: "Anti getok",
+    title: "Siap Bengkel",
     description:
       "Hal yang perlu kamu tanyakan sebelum menyetujui servis.",
     cta: "Buka",
@@ -87,7 +87,7 @@ export default function HomePage() {
                   className: "w-full sm:w-auto",
                 })}
               >
-                Checklist anti getok
+                Lihat Siap Bengkel
                 <ChevronRightIcon className="size-4" />
               </Link>
             </div>

@@ -223,7 +223,7 @@ export function ResultView() {
       <WhatsAppPanel message={view.waMessage} link={view.waLink} />
 
       <section className="space-y-3">
-        <h2 className="text-lg font-semibold text-foreground">Checklist anti getok harga</h2>
+        <h2 className="text-lg font-semibold text-foreground">Siap Bengkel: tanya ini ke mekanik</h2>
         <ChecklistView items={view.checklist} />
       </section>
 

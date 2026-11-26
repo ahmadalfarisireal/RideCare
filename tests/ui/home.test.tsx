@@ -17,7 +17,7 @@ describe("Beranda", () => {
     expect(html).toContain('href="/keluhan"');
     expect(html).toContain('href="/checklist"');
     expect(html).toContain("Mau mulai dari mana?");
-    for (const title of ["Cek keluhan", "Kamus bengkel", "Tutorial", "Anti getok"]) {
+    for (const title of ["Cek keluhan", "Kamus bengkel", "Tutorial", "Siap Bengkel"]) {
       expect(html, `rute tidak tampil: ${title}`).toContain(title);
     }
     expect(html).toContain("Tip bengkel");
