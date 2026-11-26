@@ -214,7 +214,7 @@ export const tutorials: Tutorial[] = [
     ],
     alasanPerLangkah: [
       "Roda belakang akan digeser dan diputar. Motor yang goyah bisa jatuh dan melukai tanganmu yang dekat dengan rantai.",
-      "Rantai yang bersih dan terlumasi lebih sedikit bergesekan, dan kondisi sebenarnya (kering, berkarat, kaku) lebih mudah dinilai setelah dibersihkan. Pelumas yang berlebihan mudah menempel debu, jadi cukup secukupnya.",
+      "Rantai yang bersih dan terlumasi lebih sedikit bergesekan, dan kondisi sebenarnya (kering, berkarat, kaku) lebih mudah dinilai setelah dibersihkan. Beri pelumas secukupnya, karena yang berlebihan mudah menempel debu dan bisa terlempar. Jaga agar pelumas tidak mengenai ban, cakram, tromol, atau kampas rem belakang, karena rem yang terkena pelumas jadi kurang pakem. Lap sisa yang menempel di sekitar rantai.",
       "Kekencangan rantai berbeda tiap motor, jadi acuannya harus dari tanda pada motor atau buku manual, bukan perkiraan atau rasa di tangan.",
       "Roda belakang harus bisa bergeser supaya rantai bisa dikencangkan atau dikendurkan. Longgarkan secukupnya sesuai manual, karena pengunci yang terlalu longgar membuat roda bisa bergeser sendiri.",
       "Kedua sisi penyetel diatur seimbang supaya roda lurus sejajar dengan bodi. Roda yang miring membuat rantai aus tidak merata dan motor bisa terasa tidak stabil.",
@@ -473,10 +473,10 @@ export const tutorials: Tutorial[] = [
       "Kebocoran sering meninggalkan jejak lebih dulu berupa noda basah atau tetesan di tanah, sebelum terlihat jelas pada motor.",
       "Area sekitar mesin, selang, dan sambungan itu gelap. Senter membuat rembesan kecil terlihat dari luar, sementara membongkar bagian bensin berbahaya.",
       "Lokasi, warna, bau, dan waktu munculnya membantu mekanik menebak sumbernya, apakah oli, bensin, atau cairan lain, dan mencegah pembongkaran yang tidak perlu.",
-      "Area yang bersih membuat rembesan baru terlihat jelas, jadi kamu tahu apakah masih bocor atau hanya noda lama. Bersihkan hanya area yang jauh dari sumber bocor supaya cairannya tidak tersebar.",
+      "Area yang bersih membuat rembesan baru terlihat jelas, jadi kamu tahu apakah masih bocor atau hanya noda lama. Lakukan ini hanya kalau yang basah jelas oli dan tidak tercium bau bensin. Kalau tercium bau bensin, jangan dilap dan jangan nyalakan mesin, karena uap bensin mudah terbakar dan kain yang basah bensin ikut berisiko. Jauhkan dari api dan percikan, lalu bawa ke bengkel.",
     ],
     tandaBenar:
-      'Tidak ada noda basah baru, tetesan, atau bau bensin dan oli yang menyengat, dan area yang sudah dilap tetap kering saat dilihat lagi. Kalau ada yang basah atau berbau, jangan nyalakan mesin dulu dan baca bagian "Berhenti dan ke bengkel kalau".',
+      'Tidak ada noda basah baru, tetesan, atau bau bensin dan oli yang menyengat. Kalau tadi kamu melap noda oli, area itu tetap kering saat dilihat lagi. Kalau ada yang basah atau berbau bensin, jangan nyalakan mesin dan baca bagian "Berhenti dan ke bengkel kalau".',
   },
   {
     slug: "perawatan-dasar-motor-listrik",
@@ -520,7 +520,7 @@ export const tutorials: Tutorial[] = [
     ],
     alasanPerLangkah: [
       "Sistem listrik yang dimatikan dengan benar dan tidak sedang mengisi daya mengurangi risiko tersengat atau korsleting saat kamu membersihkan dan memeriksa.",
-      "Air di soket dan celah kelistrikan bisa menimbulkan gangguan atau korsleting pada sistem bertegangan tinggi. Lap lembut sudah cukup untuk kebersihan bodi.",
+      "Air di soket dan celah kelistrikan bisa menimbulkan gangguan atau korsleting pada sistem bertegangan tinggi. Lap bodi dengan kain lembut yang kering saja, dan jangan menyiram atau menyemprotkan air ke area soket, kabel, dan celah kelistrikan. Kalau area itu terkena air, jangan isi daya dan jangan pakai motor dulu, lalu hubungi bengkel motor listrik.",
       "Ban menentukan kestabilan dan jarak berhenti, seperti pada motor lain, dan bagian ini aman kamu periksa sendiri. Angka tekanan selalu dari stiker atau buku manual.",
       "Indikator panel adalah cara motor memberi tahu masalah yang tidak terlihat olehmu. Membaca tanpa mengubah pengaturan mencegah kamu salah setel.",
       "Retak, kendor, atau perubahan bentuk pada kabel luar, soket, dan bodi bisa menjadi tanda awal masalah pada sistem listrik. Cukup diamati dari luar karena bagian dalamnya berbahaya.",

@@ -65,7 +65,7 @@ Aturan: tanpa angka harga, tanpa angka teknis dari ingatan (jenis oli, takaran, 
   - Sistem motor dimatikan sesuai manual dan tidak sedang terhubung ke pengisi daya
 - alasanPerLangkah:
   1. Sistem listrik yang dimatikan dengan benar dan tidak sedang mengisi daya mengurangi risiko tersengat atau korsleting saat kamu membersihkan dan memeriksa.
-  2. Air di soket dan celah kelistrikan bisa menimbulkan gangguan atau korsleting pada sistem bertegangan tinggi. Lap lembut sudah cukup untuk kebersihan bodi.
+  2. Air di soket dan celah kelistrikan bisa menimbulkan gangguan atau korsleting pada sistem bertegangan tinggi. Lap bodi dengan kain lembut yang kering saja, dan jangan menyiram atau menyemprotkan air ke area soket, kabel, dan celah kelistrikan. Kalau area itu terkena air, jangan isi daya dan jangan pakai motor dulu, lalu hubungi bengkel motor listrik.
   3. Ban menentukan kestabilan dan jarak berhenti, seperti pada motor lain, dan bagian ini aman kamu periksa sendiri. Angka tekanan selalu dari stiker atau buku manual.
   4. Indikator panel adalah cara motor memberi tahu masalah yang tidak terlihat olehmu. Membaca tanpa mengubah pengaturan mencegah kamu salah setel.
   5. Retak, kendor, atau perubahan bentuk pada kabel luar, soket, dan bodi bisa menjadi tanda awal masalah pada sistem listrik. Cukup diamati dari luar karena bagian dalamnya berbahaya.

@@ -21,7 +21,7 @@ Catatan keselamatan: teks ini sengaja tidak memperlonggar peringatan yang sudah 
   - Tempat dengan penerangan cukup, mesin mati
 - alasanPerLangkah:
   1. Roda belakang akan digeser dan diputar. Motor yang goyah bisa jatuh dan melukai tanganmu yang dekat dengan rantai.
-  2. Rantai yang bersih dan terlumasi lebih sedikit bergesekan, dan kondisi sebenarnya (kering, berkarat, kaku) lebih mudah dinilai setelah dibersihkan. Pelumas yang berlebihan mudah menempel debu, jadi cukup secukupnya.
+  2. Rantai yang bersih dan terlumasi lebih sedikit bergesekan, dan kondisi sebenarnya (kering, berkarat, kaku) lebih mudah dinilai setelah dibersihkan. Beri pelumas secukupnya, karena yang berlebihan mudah menempel debu dan bisa terlempar. Jaga agar pelumas tidak mengenai ban, cakram, tromol, atau kampas rem belakang, karena rem yang terkena pelumas jadi kurang pakem. Lap sisa yang menempel di sekitar rantai.
   3. Kekencangan rantai berbeda tiap motor, jadi acuannya harus dari tanda pada motor atau buku manual, bukan perkiraan atau rasa di tangan.
   4. Roda belakang harus bisa bergeser supaya rantai bisa dikencangkan atau dikendurkan. Longgarkan secukupnya sesuai manual, karena pengunci yang terlalu longgar membuat roda bisa bergeser sendiri.
   5. Kedua sisi penyetel diatur seimbang supaya roda lurus sejajar dengan bodi. Roda yang miring membuat rantai aus tidak merata dan motor bisa terasa tidak stabil.
