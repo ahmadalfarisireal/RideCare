@@ -22,7 +22,6 @@ describe("Beranda", () => {
     }
     expect(html).toContain("Tip bengkel");
     expect(html).toContain(HOME_TIPS[0]);
-    expect(html).toContain("Contoh singkat, bukan diagnosis");
     expect(html).toContain("bukan diagnosis pasti");
   });
 

@@ -1,9 +1,6 @@
 import Link from "next/link";
 
-import {
-  HomeSamplesPanel,
-  HomeTipsPanel,
-} from "@/components/home/home-samples-panel";
+import { HomeTipsPanel } from "@/components/home/home-samples-panel";
 import { buttonVariants } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import {
@@ -58,7 +55,7 @@ export default function HomePage() {
           aria-hidden="true"
           className="pointer-events-none absolute -top-24 left-1/2 h-64 w-[36rem] -translate-x-1/2 rounded-full bg-accent/10 blur-3xl"
         />
-        <div className="relative mx-auto grid w-full max-w-5xl gap-10 px-4 pb-14 pt-14 sm:px-6 sm:pb-20 sm:pt-20 lg:grid-cols-2 lg:items-center">
+        <div className="relative mx-auto grid w-full max-w-5xl gap-10 px-4 pb-14 pt-14 sm:px-6 sm:pb-20 sm:pt-20">
           <div>
             <p className="font-mono text-xs uppercase tracking-[0.08em] text-accent">
               Servis motor tanpa tebak-tebakan
@@ -101,8 +98,6 @@ export default function HomePage() {
               dilakukan oleh teknisi atau bengkel.
             </p>
           </div>
-
-          <HomeSamplesPanel />
         </div>
       </section>
 
