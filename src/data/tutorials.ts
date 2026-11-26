@@ -448,7 +448,7 @@ export const tutorials: Tutorial[] = [
       "Lihat area bawah dan sekitar motor: periksa apakah ada noda basah, tetesan baru, atau bau oli/bahan bakar.",
       "Gunakan senter untuk mengamati dari luar (tanpa membongkar) area sekitar mesin, selang yang terlihat, sambungan, dan bagian bawah tangki/sekitarnya.",
       "Catat lokasi perkiraan, warna/bau cairan, dan kapan terlihat (misalnya saat motor diam atau setelah digunakan) untuk informasi ke mekanik.",
-      "Jika aman, bersihkan area luar yang jauh dari sumber bocor agar lebih mudah melihat apakah ada rembesan baru (tetesan kecil), lalu amati kembali tanpa menyalakan mesin bila ada bau bahan bakar.",
+      "Kalau tercium bau bensin, jangan dilap dan jangan nyalakan mesin, lalu bawa ke bengkel. Kalau yang basah jelas oli dan tidak berbau bensin, lap area luar yang jauh dari sumber bocor, lalu amati kembali tanpa menyalakan mesin untuk melihat apakah ada rembesan baru.",
     ],
     when_to_stop: [
       "Tercium bau bahan bakar kuat, terlihat tetesan bahan bakar, atau ada cairan yang terus menetes.",
