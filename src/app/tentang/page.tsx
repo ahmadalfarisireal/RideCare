@@ -43,7 +43,7 @@ const HOW_TO_STEPS = [
   {
     title: "Bawa checklist dan pesan ke mekanik",
     description:
-      "Gunakan checklist anti getok harga dan pesan siap salin untuk mekanik.",
+      "Gunakan daftar Siap Bengkel dan pesan siap salin untuk mekanik.",
     href: "/checklist",
   },
 ] as const;

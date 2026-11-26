@@ -10,7 +10,7 @@ import {
 } from "@/data/ui/checklist-ui";
 import { ANTI_RIPOFF_CHECKLIST } from "@/lib/complaint-engine/templates";
 
-describe("komponen halaman Anti Getok", () => {
+describe("komponen halaman Siap Bengkel", () => {
   it("menampilkan semua item engine dalam tiga kelompok dengan alasan", () => {
     const html = renderToStaticMarkup(
       <ChecklistGroupList items={ANTI_RIPOFF_CHECKLIST} />,
